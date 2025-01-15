@@ -1,15 +1,12 @@
-import './App.css'
-import ContextForm from './components/ContextForm'
-import NavBar from './components/Navbar'
-import Routes from './routes'
+import "./App.css";
+import Routes from "./routes";
 
 function App() {
-
   return (
     <div>
-      <Routes/>
+      <Routes />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
