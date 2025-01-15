@@ -1,6 +1,11 @@
+import NavBar from "../../components/Navbar";
+
 const Devolutivas = () => {
     return (
-        <div>Devolutivas</div>
+        <div id="devolutivas">
+        <NavBar/>
+
+        </div>
     );
 }
  

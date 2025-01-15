@@ -1,7 +1,11 @@
+import NavBar from "../../components/Navbar";
 import "./Relatorios.css"
 const Relatorios = () => {
     return (
-        <div>Relatorios</div>
+        <div id="relatorios">
+        <NavBar/>
+
+        </div>
     );
 }
  

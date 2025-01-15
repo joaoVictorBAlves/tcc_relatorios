@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -19,6 +20,8 @@ const settings = ['Voltar ao Launcher', 'Sair'];
 function NavBar() {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -34,6 +37,15 @@ function NavBar() {
 
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
+    };
+
+    const handleNavigate = (page) => {
+        if (page === 'Relatórios') {
+            navigate('/relatorios');
+        } else if (page === 'Devolutivas') {
+            navigate('/devolutivas');
+        }
+        handleCloseNavMenu();
     };
 
     return (
@@ -64,8 +76,14 @@ function NavBar() {
                         {pages.map((page) => (
                             <Button
                                 key={page}
-                                onClick={handleCloseNavMenu}
-                                sx={{ my: 2, color: '#EDF1FF', display: 'block', textTransform: 'none' }}
+                                onClick={() => handleNavigate(page)}
+                                sx={{ 
+                                    my: 2, 
+                                    color: location.pathname.includes(page.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()) ? '#FFF' : '#EDF1FF', 
+                                    display: 'block', 
+                                    textTransform: 'none',
+                                    fontWeight: location.pathname.includes(page.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase()) ? 'bold' : 'normal'
+                                }}
                             >
                                 {page}
                             </Button>
