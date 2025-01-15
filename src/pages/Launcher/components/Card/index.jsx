@@ -13,7 +13,7 @@ import CardItinerarios from '../../../../assets/launcher/card_itinerarios';
 import CardMatriz from '../../../../assets/launcher/card_matriz';
 
 
-const CustomCard = ({ name, fullName, subtitle }) => {
+const CustomCard = ({ name, fullName, subtitle, disabled }) => {
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -21,7 +21,7 @@ const CustomCard = ({ name, fullName, subtitle }) => {
     };
 
     return (
-        <Button onClick={handleClick} sx={{ width: 'fit-content', textTransform: 'none', padding: 0 }}>
+        <Button disabled={disabled} onClick={handleClick} sx={{ width: 'fit-content', textTransform: 'none', padding: 0 }}>
             <Box sx={{ width: "fit-content", display: 'flex', flexDirection: 'column', gap: "5px", alignItems: 'start', margin: '0 auto' }}>
                 {name === 'relatorios' && <CardRelatorios />}
                 {name === 'correcoes' && <CardCorrecoes />}
