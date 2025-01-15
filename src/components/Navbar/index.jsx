@@ -8,8 +8,10 @@ import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
-import { Apps, AppsRounded, ArrowDownwardOutlined, ArrowDropDown, ArrowDropDownOutlined } from '@mui/icons-material';
 import { Menu, MenuItem } from '@mui/material';
+import { AppsRounded, ArrowDropDownOutlined } from '@mui/icons-material';
+
+import Logo from "../../assets/logo";
 
 const pages = ['Relatórios', 'Devolutivas'];
 const settings = ['Voltar ao Launcher', 'Sair'];
@@ -39,25 +41,26 @@ function NavBar() {
             <Container maxWidth="2xl">
                 <Toolbar disableGutters>
                     {/* Logo - Alinhado à Esquerda */}
+                    <Box display={"flex"} alignItems={"center"} gap={2}>
+                    <Logo />
                     <Typography
                         variant="h6"
-                        noWrap
-                        component="a"
-                        href="#app-bar-with-responsive-menu"
                         sx={{
-                            mr: 2,
-                            fontFamily: 'monospace',
-                            fontWeight: 700,
-                            letterSpacing: '.3rem',
-                            color: '#EDF1FF',
-                            textDecoration: 'none',
+                            fontFamily: 'Poppins',
+                            fontSize: '18px',
+                            fontWeight: 500,
+                            lineHeight: '27px',
+                            textAlign: 'left',
+                            textUnderlinePosition: 'from-font',
+                            textDecorationSkipInk: 'none'
                         }}
                     >
-                        LOGO
+                        Relatórios e Devolutivas
                     </Typography>
+                    </Box>
 
                     {/* Navegação - Centralizada */}
-                    <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', gap: 7 }}>
+                    <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', gap: 5 }}>
                         {pages.map((page) => (
                             <Button
                                 key={page}
@@ -73,13 +76,13 @@ function NavBar() {
                         {/* Menu de Navegação */}
                         <AppsRounded />
                         <Box>
-                            <Tooltip title="Open settings">
-                                <Box display={"flex"} alignItems={"center"} gap={3}>
-                                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                        <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                            <Tooltip title="Menu de Navegação">
+                                <Box display={"flex"} alignItems={"center"} gap={2} onClick={handleOpenUserMenu}>
+                                    <IconButton sx={{ p: 0 }}>
+                                        <Avatar alt="Usuário" src="/static/images/avatar/2.jpg" />
                                     </IconButton>
                                     <Box display={"flex"} alignItems={"center"}>
-                                        <Typography variant="body2" sx={{ color: '#EDF1FF' }}>Remy</Typography>
+                                        <Typography variant="body2" sx={{ color: '#EDF1FF' }}>Usuário</Typography>
                                         <ArrowDropDownOutlined />
                                     </Box>
                                 </Box>
