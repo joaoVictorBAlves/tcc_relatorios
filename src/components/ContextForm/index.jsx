@@ -13,13 +13,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 const initial_data = {
   assessments: [{ id: "1", title: "Avaliação SPAECE 2024" }],
   exams: [
-    { id: "1&2", name: "Todos os Exames" },
+    { id: "all", name: "Todos os Exames" },
     { id: "1", name: "Português" },
     { id: "2", name: "Matemática" },
   ],
   schools: [{ id: "1", name: "EEEP Joaquim Nogueira" }],
   classes: [
-    { id: "a&b", name: "Todos as Turmas" },
+    { id: "all", name: "Todos as Turmas" },
     { id: "a", name: "Turma A" },
     { id: "b", name: "Turma B" },
   ],
