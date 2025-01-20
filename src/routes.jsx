@@ -4,6 +4,7 @@ import Devolutivas from "./pages/Devolutivas";
 import Login from "./pages/Login";
 import Launcher from "./pages/Launcher";
 import Layout from "./Layout";
+import MatrixStudentItem from "./pages/Devolutivas/Matriz";
 
 const RoutesPage = () => {
   return (
@@ -22,6 +23,14 @@ const RoutesPage = () => {
           element={
             <Layout>
               <Devolutivas />
+            </Layout>
+          }
+        />
+        <Route
+          path="/devolutivas/matriz"
+          element={
+            <Layout>
+              <MatrixStudentItem />
             </Layout>
           }
         />
