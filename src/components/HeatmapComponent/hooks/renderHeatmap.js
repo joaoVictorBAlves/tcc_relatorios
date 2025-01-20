@@ -1,7 +1,7 @@
 import { createMatrixLayout } from "./createMatrixLayout";
 import * as d3 from "d3";
 
-export function renderHeatmap(labelsX, labelsY, matrix, width, height, margin, heatmapRef, color, orderBy, type, handleOnMouseOver, handleOnMouseClick, selectedLabel, extradata) {
+export function renderHeatmap(labelsX, labelsY, matrix, width, height, margin, heatmapRef, color, orderBy, type, handleOnMouseOver, handleOnMouseClick, selectedLabel) {
     const data = createMatrixLayout(
         labelsX,
         labelsY,
@@ -10,12 +10,6 @@ export function renderHeatmap(labelsX, labelsY, matrix, width, height, margin, h
         height,
         margin
     );
-    console.log("recebendo dados....")
-    console.log({
-        labelsX,
-        labelsY,
-        matrix
-    })
     // Limpar o gráfico existente
     d3.select(heatmapRef.current).selectAll("*").remove();
     // Render
@@ -33,23 +27,19 @@ export function renderHeatmap(labelsX, labelsY, matrix, width, height, margin, h
 
     cell
         .append("rect")
-        .attr("height", (d) => d.h * 0.95)
-        .attr("width", (d) => d.w * 0.95)
-        .attr("rx", "6px")
-        .attr("ry", "6px")
-        .style("fill", (d) => {
-            if (d.value == undefined || d.value == null || d.value === '') {
-                return "white";
-            }
-            return Array.isArray(color) ? color[d.value] : color(d.value);
-        })
+        .attr("height", (d) => d.h * 0.95) 
+        .attr("width", (d) => d.w * 0.995)
+        .attr("rx", "1px")
+        .attr("ry", "1px")
+        .style("fill", (d) => (color[d.value] ? color[d.value] : color[0]))
         .on("mouseover", function () {
             d3.select(this).style("fill", d3.color(d3.select(this).style("fill")).darker());
         })
         .on("mouseout", function () {
             d3.select(this).style("fill", d3.color(d3.select(this).style("fill")).brighter());
         });
-    if (orderBy != "2")
+
+    if (orderBy != "x")
         matrixGroup
             .append("g")
             .attr("class", "labels")
@@ -58,10 +48,10 @@ export function renderHeatmap(labelsX, labelsY, matrix, width, height, margin, h
             .enter()
             .append("text")
             .attr("class", "source")
-            .attr("text-anchor", "end")
+            .attr("text-anchor", "start")
             .attr("y", (d) => d.y + d.h / 2)
-            .attr("x", -10)
-            .text((d, i) => labelsY[i].label)
+            .attr("x", -40)
+            .text((d, i) => `A${labelsY[i].split("_")[1]}/${labelsY[i].split("_")[2]}`)
             .style("cursor", "pointer")
             .on('click', function (event) {
                 handleOnMouseClick(event, "y");
@@ -76,7 +66,7 @@ export function renderHeatmap(labelsX, labelsY, matrix, width, height, margin, h
                 }
                 return "normal";
             });
-    if (orderBy != "1") {
+    if (orderBy != "y")
         matrixGroup
             .append("g")
             .attr("class", "labels")
@@ -88,46 +78,26 @@ export function renderHeatmap(labelsX, labelsY, matrix, width, height, margin, h
             .attr("text-anchor", "middle")
             .attr("x", (d) => d.x + d.w / 2)
             .attr("y", -20)
-            .text((d, i) => labelsX[i].label)
+            .text((d, i) => `${labelsX[i].split("_")[0]}/${labelsX[i].split("_")[1]}`)
             .style("cursor", "pointer")
             .on('click', function (event) {
                 handleOnMouseClick(event, "x");
-            })
-            .attr("fill", (d) => {
+            }).attr("fill", (d) => {
                 if (d?.source == selectedLabel) {
-                    return "#365BDC";
+                    return "#365BDC"
                 }
                 return "black";
-            })
-            .style("font-weight", (d) => {
+            }).style("font-weight", (d) => {
                 if (d?.source == selectedLabel) {
-                    return "700";
+                    return "700"
                 }
                 return "normal";
-            })
-            .call((selection) => {
-                selection.append("title")
-                    .text((d) => {
-                        if (d.source == "H1") {
-                            return extradata.abilities[0];
-                        } else if (d.source == "H2") {
-                            return extradata.abilities[1];
-                        } else if (d.source == "H3") {
-                            return extradata.abilities[2];
-                        } else if (d.source == "H4") {
-                            return extradata.abilities[3];
-                        }
-                        return '';
-                    });
             });
-    }
-
-
 
     matrixGroup
         .selectAll("text")
         .style("font-family", "Poppins, sans-serif")
         .style("font-weight", "400")
-        .style("font-size", "18px")
+        .style("font-size", "12px")
         .style("alignment-baseline", "middle");
 }

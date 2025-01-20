@@ -8,9 +8,7 @@ import {
   sortMatrixByRowSum,
 } from "./hooks/sortMatrix";
 
-import data from "../../db/db.json";
-
-const HeatmapComponent = ({
+const Heatmap = ({
   width,
   height,
   margin,
@@ -18,15 +16,13 @@ const HeatmapComponent = ({
   labelsY,
   matrix,
   type,
-  order = 1,
-  orderBy = "all",
+  order = null,
+  orderBy = null,
   palete = null,
   selectedLabel,
   setSelectedLabel,
-  payloadArray,
 }) => {
   const heatmapRef = useRef(null);
-
   const [dataset, setDataset] = useState(matrix);
   const [data_x, setDataX] = useState(labelsX);
   const [data_y, setDataY] = useState(labelsY);
@@ -34,10 +30,10 @@ const HeatmapComponent = ({
   const [refLabelsX, setRefLabelsX] = useState(labelsX);
   const [refLabelsY, setRefLabelsY] = useState(labelsY);
   const [refMatrix, setRefMatrix] = useState(matrix);
-  const [refPayloadArray, setRefPayloadArray] = useState(payloadArray);
 
-  function handleOnMouseOver(event, type) {}
-
+  function handleOnMouseOver(event, type) {
+    // Pass
+  }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   function handleOnMouseClick(event, type) {
     if (type == "x") setSelectedLabel(event.target.__data__.source);
@@ -45,40 +41,24 @@ const HeatmapComponent = ({
   }
 
   useEffect(() => {
-    setDataset(matrix);
-    setDataX(labelsX);
-    setDataY(labelsY);
-    setRefLabelsX(labelsX);
-    setRefLabelsY(labelsY);
-    setRefMatrix(matrix);
-    setRefPayloadArray(payloadArray);
-  }, [matrix, labelsX, labelsY, payloadArray]);
-
-  useEffect(() => {
     let dataset = JSON.parse(JSON.stringify(refMatrix));
     let data_x = JSON.parse(JSON.stringify(refLabelsX));
     let data_y = JSON.parse(JSON.stringify(refLabelsY));
 
-    if (orderBy == "1" && order == "1") {
-      sortAndGroupedLines(dataset, data_y, true, "error");
-    } else if (orderBy == "1" && order == "2") {
-      sortAndGroupedLines(dataset, data_y, false, "error");
-    } else if (orderBy == "1" && order == "3") {
-      let payloadArray = JSON.parse(JSON.stringify(refPayloadArray));
-      sortAndGroupedLines(dataset, data_y, false, "prof", payloadArray);
-    } else if (orderBy == "1" && order == "4") {
-      let payloadArray = JSON.parse(JSON.stringify(refPayloadArray));
-      sortAndGroupedLines(dataset, data_y, true, "prof", payloadArray);
-    } else if (orderBy == "2" && order == "1") {
-      sortAndGroupedColumns(dataset, data_x, true, "error");
-    } else if (orderBy == "2" && order == "2") {
-      sortAndGroupedColumns(dataset, data_x, false, "error");
-    } else if (orderBy == "2" && order == "3") {
-      let payloadArray = JSON.parse(JSON.stringify(refPayloadArray));
-      sortAndGroupedColumns(dataset, data_x, true, "dificulty", payloadArray);
-    } else if (orderBy == "2" && order == "4") {
-      let payloadArray = JSON.parse(JSON.stringify(refPayloadArray));
-      sortAndGroupedColumns(dataset, data_x, false, "dificulty", payloadArray);
+    if (orderBy == "x" && order == "ascending") {
+      sortAndGroupedColumns(dataset, data_x, false, "score");
+    } else if (orderBy == "x" && order == "descending") {
+      sortAndGroupedColumns(dataset, data_x, true, "score");
+    } else if (orderBy == "y" && order == "ascending") {
+      sortAndGroupedLines(dataset, data_y, false, "score");
+    } else if (orderBy == "y" && order == "descending") {
+      sortAndGroupedLines(dataset, data_y, true, "score");
+    } else if (orderBy == "full" && order == "ascending") {
+      sortMatrixByRowSum(dataset, data_y, true);
+      sortMatrixByColumnSum(dataset, data_x, true);
+    } else if (orderBy == "full" && order == "descending") {
+      sortMatrixByRowSum(dataset, data_y, false);
+      sortMatrixByColumnSum(dataset, data_x, false);
     }
 
     setDataset(dataset);
@@ -90,12 +70,18 @@ const HeatmapComponent = ({
     matrix,
     order,
     orderBy,
-    payloadArray,
     refLabelsX,
     refLabelsY,
     refMatrix,
-    refPayloadArray,
   ]);
+
+  useEffect(() => {
+    setRefLabelsX(labelsX);
+    setRefLabelsY(labelsY);
+    setRefMatrix(matrix);
+  }, [matrix, labelsX, labelsY]);
+
+  console.log("Heatmap", matrix, dataset);
 
   useEffect(() => {
     const distinctValues = [...new Set(matrix.flat())];
@@ -106,31 +92,18 @@ const HeatmapComponent = ({
         palete == "palete2"
           ? d3.interpolateRdBu
           : palete == "palete3"
-          ? d3.interpolateBlues
-          : d3.interpolateRdYlGn
+            ? d3.interpolateBlues
+            : d3.interpolateRdYlGn
       );
 
-    let color;
-
-    if (type == "categorical") {
-      if (palete == "palete1") {
-        color = ["#E5193B", "#FED233", "#3FCC33"];
-      } else if (palete == "palete2") {
-        color = ["#88572C", "#DDB27C", "#12939A"];
-      } else {
-        color = ["#00939C", "#89C6CA", "#E6FAFA"];
-      }
-    } else if (type == "binary") {
-      if (palete == "palete1") {
-        color = ["#E5193B", "#3FCC33"];
-      } else if (palete == "palete2") {
-        color = ["#88572C", "#12939A"];
-      } else {
-        color = ["#00939C", "#89C6CA"];
-      }
-    } else {
-      color = colorScale;
-    }
+    const color =
+      type == "categorical"
+        ? palete == "palete1"
+          ? ["#E5193B", "#3FCC33"]
+          : palete == "palete2"
+            ? ["#88572C", "#DDB27C", "#12939A"]
+            : ["#00939C", "#89C6CA", "#E6FAFA"]
+        : colorScale;
 
     renderHeatmap(
       data_x,
@@ -145,14 +118,12 @@ const HeatmapComponent = ({
       type,
       handleOnMouseOver,
       handleOnMouseClick,
-      selectedLabel,
-      data
+      selectedLabel
     );
   }, [
     dataset,
     data_x,
     orderBy,
-    order,
     data_y,
     width,
     height,
@@ -179,4 +150,4 @@ const HeatmapComponent = ({
   );
 };
 
-export default HeatmapComponent;
+export default Heatmap;

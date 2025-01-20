@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { useSelectionStore } from "../../../stores/contextStore";
 import Papa from "papaparse";
-import { Box, Button, Typography } from "@mui/material";
-import { People, Place, School } from "@mui/icons-material";
+import { Box, Typography } from "@mui/material";
+import ContextBox from "./components/ContextBox";
+import MatrixActions from "./components/MatrixActions";
+import SortStatus from "./components/SortStatus";
+import { Legend } from "../../../components/Legend/Legend";
+import Heatmap from "../../../components/HeatmapComponent";
 
-// Função para determinar o nome do arquivo com base nos IDs
 const getFileName = (examId, classId) => {
   if (classId === "all" && examId === "all") {
     return "assessment-1";
@@ -37,18 +40,40 @@ const MatrixStudentItem = () => {
     exam,
     school,
     class: selectedClass,
+    agroupedQuestions,
+    agroupedStudents,
   } = useSelectionStore();
   const [csvData, setCsvData] = useState(null);
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
   const [data, setData] = useState([]);
 
+  const [orderBy, setOrderBy] = useState("all");
+  const [order, setOrder] = useState("ascending");
+
+  const [dimensions, setDimensions] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
   useEffect(() => {
-    // Determina os valores dos IDs
+    const handleResize = () => {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
     const classId = selectedClass.id === "&" ? "all" : selectedClass.id;
     const examId = exam.id === "&" ? "all" : exam.id;
 
-    // Carrega e parseia o arquivo CSV apropriado
     const fetchCSV = async () => {
       const fileName = getFileName(examId, classId);
       const data = await loadAndParseCSV(fileName);
@@ -64,171 +89,77 @@ const MatrixStudentItem = () => {
       const rowLabels = csvData.map((row) => row.Student);
       const columnLabels = Object.keys(csvData[0]).slice(1);
       const heatmapData = csvData.map((row) =>
-        columnLabels.map((col) => parseFloat(row[col]))
+        columnLabels.map((col) => Number(row[col]) || 0)
       );
+
+      console.log(heatmapData);
 
       setRows(rowLabels);
       setColumns(columnLabels);
-      setData(heatmapData);
+      setData(heatmapData)
+      console.log("setData", heatmapData);
     }
   }, [csvData]);
 
   return (
-    <Box marginInline={13} marginTop={4}>
-      <Typography
-        variant="h6"
-        component="div"
-        sx={{
+    <Box marginInline={12} marginTop={4}>
+      <Typography variant="h6" component="div" sx={{ fontFamily: "Poppins", fontSize: 28, fontWeight: 500, lineHeight: "50px", textAlign: "left" }}>Devolutivas</Typography>
+      <ContextBox assessment={assessment} exam={exam} school={school} selectedClass={selectedClass} onChangeContext={() => { }} onPrint={() => { }} />
+      <MatrixActions />
+      <Box fullWidth display={"flex"} justifyContent={"space-between"} alignItems={"center"} mt={4}>
+        <Typography variant="h6" component="div" sx={{ fontFamily: "Poppins", fontSize: "18px", fontWeight: 600, lineHeight: "26px", textAlign: "left" }}>
+          {assessment.title}
+        </Typography>
+        {order !== null ? (
+          <Box display={"flex"} alignItems={"center"} gap={"10px"}>
+            <Typography variant="h6" component="div" sx={{ fontFamily: "Poppins", fontSize: "14px", fontWeight: 600, lineHeight: "20px", textAlign: "left" }}>Ordenado em</Typography>
+            <SortStatus order={order} orderBy={orderBy} />
+          </Box>
+        ) : (
+          <Typography variant="h6" component="div" sx={{ fontFamily: "Poppins", fontSize: "14px", fontWeight: 600, lineHeight: "20px", textAlign: "left" }}>Ordem Original</Typography>
+        )}
+      </Box>
+      <Box fullWidth display={"flex"} justifyContent={"space-between"} alignItems={"center"} mt={2}>
+        <Typography variant="h6" component="div" sx={{
           fontFamily: "Poppins",
-          fontSize: 28,
-          fontWeight: 500,
-          lineHeight: "50px",
+          fontSize: "14px",
+          fontWeight: 400,
+          lineHeight: "21px",
           textAlign: "left",
           textUnderlinePosition: "from-font",
           textDecorationSkipInk: "none",
-        }}
-      >
-        Devolutivas
-      </Typography>
-      {/* Controls */}
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="space-between"
-        marginTop={4}
-        bgcolor={"#F7F8FA"}
-        border={"1px solid #CACDD5"}
-        borderRadius={1}
-        padding={1.5}
-        width={"100%"}
-      >
-        {/* Context */}
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          alignItems={"start"}
-          padding={2}
-        >
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{
-              fontFamily: "Poppins",
-              fontSize: "22px",
-              fontWeight: 500,
-              lineHeight: "32px",
-              textAlign: "left",
-              textUnderlinePosition: "from-font",
-              textDecorationSkipInk: "none",
-              color: "#0F1113",
-            }}
-          >
-            {assessment.title}
-            {exam.id !== "all" && ` / ${exam.name}`}
-          </Typography>
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-            gap={"10px"}
-          >
-            <Box display={"flex"} gap={"5px"}>
-              <Place sx={{ color: "#677080", fontSize: 20 }} />
-              <Typography
-                variant="h6"
-                component="div"
-                sx={{
-                  fontFamily: "Poppins",
-                  fontSize: "14px",
-                  fontWeight: 500,
-                  lineHeight: "24px",
-                  textAlign: "left",
-                  textUnderlinePosition: "from-font",
-                  textDecorationSkipInk: "none",
-                  color: "#677080",
-                }}
-              >
-                Ceará, Fortaleza
-              </Typography>
-            </Box>
-            <Box display={"flex"} gap={"5px"}>
-              <School sx={{ color: "#677080", fontSize: 20 }} />
-              <Typography
-                variant="h6"
-                component="div"
-                sx={{
-                  fontFamily: "Poppins",
-                  fontSize: "14px",
-                  fontWeight: 500,
-                  lineHeight: "24px",
-                  textAlign: "left",
-                  textUnderlinePosition: "from-font",
-                  textDecorationSkipInk: "none",
-                  color: "#677080",
-                }}
-              >
-                {school.name}
-              </Typography>
-            </Box>
-            <Box display={"flex"} gap={"5px"}>
-              <People sx={{ color: "#677080", fontSize: 20 }} />
-              <Typography
-                variant="h6"
-                component="div"
-                sx={{
-                  fontFamily: "Poppins",
-                  fontSize: "14px",
-                  fontWeight: 500,
-                  lineHeight: "24px",
-                  textAlign: "left",
-                  textUnderlinePosition: "from-font",
-                  textDecorationSkipInk: "none",
-                  color: "#677080",
-                }}
-              >
-                {selectedClass.name}
-              </Typography>
-            </Box>
-          </Box>
-        </Box>
-        {/* Buttons */}
-        <Box display={"flex"} alignItems={"end"}>
-          <Button
-            variant="contained"
-            sx={{
-              bgcolor: "#365BDC",
-              marginRight: 2,
-              fontFamily: "Poppins",
-              fontSize: "16px",
-              fontWeight: 600,
-              lineHeight: "20px",
-              textAlign: "left",
-              textUnderlinePosition: "from-font",
-              textDecorationSkipInk: "none",
-              padding: "12px 20px",
-            }}
-          >
-            ALTERAR CONTEXTO
-          </Button>
-          <Button
-            variant="contained"
-            sx={{
-              bgcolor: "#FFFFFF",
-              border: "1px solid #CACDD5",
-              color: "#1D2432",
-              fontFamily: "Poppins",
-              fontSize: "16px",
-              fontWeight: 600,
-              lineHeight: "20px",
-              textAlign: "left",
-              textUnderlinePosition: "from-font",
-              textDecorationSkipInk: "none",
-              padding: "12px 20px",
-            }}
-          >
-            IMPRIMIR DEVOLUTIVA
-          </Button>
-        </Box>
+          color: "#677080"
+
+        }}>{columns.length * rows.length} Resultados | {rows.length} {agroupedStudents ? 'Turmas' : 'Alunos'} e {columns.length} {agroupedQuestions ? 'Exames' : 'Questões'}</Typography>
+
+        <Legend
+          items={[
+            {
+              color: "#EF4838",
+              label: "Erro",
+            },
+            {
+              color: "#40C156",
+              label: "Acerto",
+            },
+          ]}
+        ></Legend>
+      </Box>
+      <Box fullWidth marginTop={2} sx={{ border: "1px solid #E5E5E5", borderRadius: "8px" }}>
+        <Heatmap
+          type={"categorical"}
+          width={dimensions.width * 0.8}
+          height={dimensions.height}
+          margin={80}
+          labelsX={columns}
+          labelsY={rows}
+          matrix={data}
+          orderBy={orderBy}
+          order={order}
+          palete={"palete1"}
+          selectedLabel={null}
+          setSelectedLabel={() => { }}
+        />
       </Box>
     </Box>
   );

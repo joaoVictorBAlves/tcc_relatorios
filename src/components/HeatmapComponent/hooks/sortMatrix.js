@@ -77,6 +77,15 @@ export function sortMatrixVertical(matrix, vector, factor) {
 export function sortMatrixHorizontal(matrix, vector, factor) {
     const count = new Array(matrix[0].length).fill(0);
 
+    const m = JSON.parse(JSON.stringify(matrix));
+    const v = JSON.parse(JSON.stringify(vector));
+
+    console.log("Matriz original");
+    console.log(m);
+    console.log("Labels originais");
+    console.log(v);
+    console.log("factor: :" + factor);
+
     // Contagem da presença do fator em cada coluna
     for (let j = 0; j < matrix[0].length; j++) {
         for (let i = 0; i < matrix.length; i++) {
@@ -110,205 +119,48 @@ export function sortMatrixHorizontal(matrix, vector, factor) {
     }
 }
 
-export function sortMatrizByError(matrix, vector, ascending = true) {
-    const countZeros = matrix.map(row => row.filter(item => item === 0).length);
-
-    for (let i = 0; i < matrix.length - 1; i++) {
-        for (let j = 0; j < matrix.length - i - 1; j++) {
-            if (ascending) {
-                if (countZeros[j] > countZeros[j + 1]) {
-                    const tempRow = matrix[j];
-                    const temItem = vector[j];
-                    matrix[j] = matrix[j + 1];
-                    vector[j] = vector[j + 1];
-                    matrix[j + 1] = tempRow;
-                    vector[j + 1] = temItem;
-
-                    const tempCount = countZeros[j];
-                    countZeros[j] = countZeros[j + 1];
-                    countZeros[j + 1] = tempCount;
-                }
-            } else {
-                if (countZeros[j] < countZeros[j + 1]) {
-                    const tempRow = matrix[j];
-                    const temItem = vector[j];
-                    matrix[j] = matrix[j + 1];
-                    vector[j] = vector[j + 1];
-                    matrix[j + 1] = tempRow;
-                    vector[j + 1] = temItem;
-
-                    const tempCount = countZeros[j];
-                    countZeros[j] = countZeros[j + 1];
-                    countZeros[j + 1] = tempCount;
-                }
-            }
+export function sortAndGroupedLines(dataset, vector, best, method = "categorico") {
+    if (best) {
+        sortMatrixLines(dataset, false);
+        if (method == "score") {
+            sortMatrixByRowSum(dataset, vector, true);
+        } else if (method == "categorico") {
+            sortMatrixVertical(dataset, vector, 1);
+            sortMatrixVertical(dataset, vector, 2);
+            sortMatrixVertical(dataset, vector, 3);
+        }
+    } else {
+        sortMatrixLines(dataset, true);
+        if (method == "score") {
+            sortMatrixByRowSum(dataset, vector, false);
+        } else if (method == "categorico") {
+            sortMatrixVertical(dataset, vector, 3);
+            sortMatrixVertical(dataset, vector, 2);
+            sortMatrixVertical(dataset, vector, 1);
         }
     }
 }
 
-export function sortColumnsByError(matrix, vector, ascending = true) {
-    // Transpõe a matriz para facilitar a manipulação das colunas
-    const transposedMatrix = matrix[0].map((_, colIndex) => matrix.map(row => row[colIndex]));
-
-    // Conta a quantidade de zeros em cada coluna
-    const countZeros = transposedMatrix.map(col => col.filter(item => item === 0).length);
-
-    // Aplica o algoritmo de ordenação Bubble Sort às colunas transpostas, vetor e countZeros
-    for (let i = 0; i < transposedMatrix.length - 1; i++) {
-        for (let j = 0; j < transposedMatrix.length - i - 1; j++) {
-            if (ascending) {
-                if (countZeros[j] > countZeros[j + 1]) {
-                    // Troca as colunas
-                    const tempCol = transposedMatrix[j];
-                    transposedMatrix[j] = transposedMatrix[j + 1];
-                    transposedMatrix[j + 1] = tempCol;
-
-                    // Troca os itens do vetor
-                    const tempItem = vector[j];
-                    vector[j] = vector[j + 1];
-                    vector[j + 1] = tempItem;
-
-                    // Troca os contadores de zeros
-                    const tempCount = countZeros[j];
-                    countZeros[j] = countZeros[j + 1];
-                    countZeros[j + 1] = tempCount;
-                }
-            } else {
-                if (countZeros[j] < countZeros[j + 1]) {
-                    // Troca as colunas
-                    const tempCol = transposedMatrix[j];
-                    transposedMatrix[j] = transposedMatrix[j + 1];
-                    transposedMatrix[j + 1] = tempCol;
-
-                    // Troca os itens do vetor
-                    const tempItem = vector[j];
-                    vector[j] = vector[j + 1];
-                    vector[j + 1] = tempItem;
-
-                    // Troca os contadores de zeros
-                    const tempCount = countZeros[j];
-                    countZeros[j] = countZeros[j + 1];
-                    countZeros[j + 1] = tempCount;
-                }
-            }
+export function sortAndGroupedColumns(dataset, vector, best, method) {
+    if (best) {
+        sortMatrixColumns(dataset, false);
+        if (method == "score") {
+            sortMatrixByColumnSum(dataset, vector, true);
+        } else if (method == "categorico") {
+            sortMatrixHorizontal(dataset, vector, 1);
+            sortMatrixHorizontal(dataset, vector, 2);
+            sortMatrixHorizontal(dataset, vector, 3);
+        }
+    } else {
+        sortMatrixColumns(dataset, false);
+        if (method == "score") {
+            sortMatrixByColumnSum(dataset, vector, false);
+        } else if (method == "categorico") {
+            sortMatrixHorizontal(dataset, vector, 3);
+            sortMatrixHorizontal(dataset, vector, 2);
+            sortMatrixHorizontal(dataset, vector, 1);
         }
     }
-
-    // Transpõe a matriz de volta para sua forma original
-    for (let i = 0; i < matrix.length; i++) {
-        for (let j = 0; j < matrix[0].length; j++) {
-            matrix[i][j] = transposedMatrix[j][i];
-        }
-    }
-}
-
-
-export function sortLinesByPayload(matrix, vector, payload, ascending = true) {
-    // Combina matrix, vector e payload em uma estrutura
-    const combined = matrix.map((row, index) => ({
-        row,
-        item: vector[index],
-        payload: payload[index]
-    }));
-
-    // Ordena a estrutura combinada com base no payload
-    combined.sort((a, b) => ascending ? a.payload - b.payload : b.payload - a.payload);
-
-    // Separa os dados ordenados de volta em matrix, vector e payload
-    for (let i = 0; i < combined.length; i++) {
-        matrix[i] = combined[i].row;
-        vector[i] = combined[i].item;
-        payload[i] = combined[i].payload;
-    }
-}
-
-
-
-export function sortAndGroupedLines(dataset, vector, ascending, method = "categorico", payload) {
-    if (method == "error") {
-        if (ascending) {
-            sortMatrixLines(dataset, true);
-            sortMatrizByError(dataset, vector, true);
-        } else {
-            sortMatrixLines(dataset, true);
-            sortMatrizByError(dataset, vector, false);
-
-        }
-    } else if (method == "prof") {
-        if (ascending) {
-            sortMatrixLines(dataset, true);
-            sortLinesByPayload(dataset, vector, payload, true);
-        } else {
-            sortMatrixLines(dataset, true);
-            sortLinesByPayload(dataset, vector, payload, false);
-
-        }
-    }
-}
-
-export function sortColumnsByPayload(matrix, vector, payload, ascending = true) {
-    // Transforma a matrix para facilitar a manipulação das colunas
-    const transposedMatrix = matrix[0].map((_, colIndex) => matrix.map(row => row[colIndex]));
-
-    // Combina transposedMatrix, vector e payload em uma estrutura
-    const combined = transposedMatrix.map((col, index) => ({
-        col,
-        item: vector[index],
-        payload: payload[index]
-    }));
-
-    // Ordena a estrutura combinada com base no payload
-    combined.sort((a, b) => ascending ? a.payload - b.payload : b.payload - a.payload);
-
-    // Separa os dados ordenados de volta em transposedMatrix, vector e payload
-    for (let i = 0; i < combined.length; i++) {
-        for (let j = 0; j < matrix.length; j++) {
-            matrix[j][i] = combined[i].col[j];
-        }
-        vector[i] = combined[i].item;
-        payload[i] = combined[i].payload;
-    }
-}
-
-
-export function sortAndGroupedColumns(dataset, vector, ascending = true, method, payload) {
-    if (method == "error") {
-        if (ascending) {
-            sortMatrixColumns(dataset, true);
-            sortColumnsByError(dataset, vector, true);
-        } else {
-            sortMatrixColumns(dataset, true);
-            sortColumnsByError(dataset, vector, false);
-            (dataset, vector, false);
-        }
-    } else if (method == "dificulty") {
-        if (ascending) {
-            sortMatrixColumns(dataset, true);
-            sortColumnsByPayload(dataset, vector, payload, true);
-        } else {
-            sortMatrixColumns(dataset, true);
-            sortColumnsByPayload(dataset, vector, payload, false);
-        }
-    }
-    // if (best) {
-    //     sortMatrixColumns(dataset, false);
-    //     if (method == "score") {
-    //         sortMatrixByColumnSum(dataset, vector, true);
-    //     } else if (method == "categorico") {
-    //         sortMatrixHorizontal(dataset, vector, 1);
-    //         sortMatrixHorizontal(dataset, vector, 2);
-    //         sortMatrixHorizontal(dataset, vector, 3);
-    //     }
-    // } else {
-    //     sortMatrixColumns(dataset, true);
-    //     if (method == "score") {
-    //         sortMatrixByColumnSum(dataset, vector, false);
-    //     } else if (method == "categorico") {
-    //         sortMatrixHorizontal(dataset, vector, 3);
-    //         sortMatrixHorizontal(dataset, vector, 2);
-    //         sortMatrixHorizontal(dataset, vector, 1);
-    //     }
-    // }
 }
 
 export function sumArray(arr) {
