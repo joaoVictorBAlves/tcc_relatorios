@@ -39,7 +39,7 @@ export function renderHeatmap(labelsX, labelsY, matrix, width, height, margin, h
             d3.select(this).style("fill", d3.color(d3.select(this).style("fill")).brighter());
         });
 
-    if (orderBy != "x")
+    if (orderBy != "y")
         matrixGroup
             .append("g")
             .attr("class", "labels")
@@ -66,7 +66,7 @@ export function renderHeatmap(labelsX, labelsY, matrix, width, height, margin, h
                 }
                 return "normal";
             });
-    if (orderBy != "y")
+    if (orderBy != "x")
         matrixGroup
             .append("g")
             .attr("class", "labels")

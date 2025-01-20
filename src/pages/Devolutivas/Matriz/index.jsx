@@ -49,7 +49,10 @@ const MatrixStudentItem = () => {
   const [data, setData] = useState([]);
 
   const [orderBy, setOrderBy] = useState("all");
-  const [order, setOrder] = useState("ascending");
+  const [order, setOrder] = useState("pattern");
+
+  const [prevOrderBy, setPrevOrderBy] = useState("all");
+  const [prevOrder, setPrevOrder] = useState("pattern");
 
   const [dimensions, setDimensions] = useState({
     width: window.innerWidth,
@@ -77,7 +80,6 @@ const MatrixStudentItem = () => {
     const fetchCSV = async () => {
       const fileName = getFileName(examId, classId);
       const data = await loadAndParseCSV(fileName);
-      console.log(data);
       setCsvData(data);
     };
 
@@ -92,12 +94,9 @@ const MatrixStudentItem = () => {
         columnLabels.map((col) => Number(row[col]) || 0)
       );
 
-      console.log(heatmapData);
-
       setRows(rowLabels);
       setColumns(columnLabels);
       setData(heatmapData)
-      console.log("setData", heatmapData);
     }
   }, [csvData]);
 
@@ -105,8 +104,17 @@ const MatrixStudentItem = () => {
     <Box marginInline={12} marginTop={4}>
       <Typography variant="h6" component="div" sx={{ fontFamily: "Poppins", fontSize: 28, fontWeight: 500, lineHeight: "50px", textAlign: "left" }}>Devolutivas</Typography>
       <ContextBox assessment={assessment} exam={exam} school={school} selectedClass={selectedClass} onChangeContext={() => { }} onPrint={() => { }} />
-      <MatrixActions />
-      <Box fullWidth display={"flex"} justifyContent={"space-between"} alignItems={"center"} mt={4}>
+      <MatrixActions
+        prevOrder={prevOrder}
+        prevOrderBy={prevOrderBy}
+        setPrevOrder={setPrevOrder}
+        setPrevOrderBy={setPrevOrderBy}
+        onSort={() => {
+          setOrder(prevOrder);
+          setOrderBy(prevOrderBy);
+        }}
+      />
+      <Box width={"100%"} display={"flex"} justifyContent={"space-between"} alignItems={"center"} mt={4}>
         <Typography variant="h6" component="div" sx={{ fontFamily: "Poppins", fontSize: "18px", fontWeight: 600, lineHeight: "26px", textAlign: "left" }}>
           {assessment.title}
         </Typography>
@@ -119,7 +127,7 @@ const MatrixStudentItem = () => {
           <Typography variant="h6" component="div" sx={{ fontFamily: "Poppins", fontSize: "14px", fontWeight: 600, lineHeight: "20px", textAlign: "left" }}>Ordem Original</Typography>
         )}
       </Box>
-      <Box fullWidth display={"flex"} justifyContent={"space-between"} alignItems={"center"} mt={2}>
+      <Box width={"100%"} display={"flex"} justifyContent={"space-between"} alignItems={"center"} mt={2}>
         <Typography variant="h6" component="div" sx={{
           fontFamily: "Poppins",
           fontSize: "14px",
@@ -145,10 +153,10 @@ const MatrixStudentItem = () => {
           ]}
         ></Legend>
       </Box>
-      <Box fullWidth marginTop={2} sx={{ border: "1px solid #E5E5E5", borderRadius: "8px" }}>
+      <Box width={"100%"} marginTop={2} sx={{ border: "1px solid #E5E5E5", borderRadius: "8px" }}>
         <Heatmap
           type={"categorical"}
-          width={dimensions.width * 0.8}
+          width={dimensions.width * 0.85}
           height={dimensions.height}
           margin={80}
           labelsX={columns}

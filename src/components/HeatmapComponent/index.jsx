@@ -46,17 +46,23 @@ const Heatmap = ({
     let data_y = JSON.parse(JSON.stringify(refLabelsY));
 
     if (orderBy == "x" && order == "ascending") {
-      sortAndGroupedColumns(dataset, data_x, false, "score");
+      console.log("x and ascending");
+      sortAndGroupedColumns(dataset, data_y, false, "score");
     } else if (orderBy == "x" && order == "descending") {
-      sortAndGroupedColumns(dataset, data_x, true, "score");
+      console.log("x and descending");
+      sortAndGroupedColumns(dataset, data_y, true, "score");
     } else if (orderBy == "y" && order == "ascending") {
-      sortAndGroupedLines(dataset, data_y, false, "score");
+      console.log("y and ascending");
+      sortAndGroupedLines(dataset, data_x, false, "score");
     } else if (orderBy == "y" && order == "descending") {
-      sortAndGroupedLines(dataset, data_y, true, "score");
-    } else if (orderBy == "full" && order == "ascending") {
+      console.log("y and descending");
+      sortAndGroupedLines(dataset, data_x, true, "score");
+    } else if (orderBy == "all" && order == "ascending") {
+      console.log("all and ascending");
       sortMatrixByRowSum(dataset, data_y, true);
       sortMatrixByColumnSum(dataset, data_x, true);
-    } else if (orderBy == "full" && order == "descending") {
+    } else if (orderBy == "all" && order == "descending") {
+      console.log("all and descending");
       sortMatrixByRowSum(dataset, data_y, false);
       sortMatrixByColumnSum(dataset, data_x, false);
     }
@@ -76,12 +82,11 @@ const Heatmap = ({
   ]);
 
   useEffect(() => {
-    setRefLabelsX(labelsX);
-    setRefLabelsY(labelsY);
-    setRefMatrix(matrix);
-  }, [matrix, labelsX, labelsY]);
+    // setRefLabelsX(labelsX);
+    // setRefLabelsY(labelsY);
+    // setRefMatrix(matrix);
 
-  console.log("Heatmap", matrix, dataset);
+  }, [matrix, labelsX, labelsY]);
 
   useEffect(() => {
     const distinctValues = [...new Set(matrix.flat())];
@@ -124,6 +129,7 @@ const Heatmap = ({
     dataset,
     data_x,
     orderBy,
+    order,
     data_y,
     width,
     height,

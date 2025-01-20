@@ -39,7 +39,7 @@ const Login = () => {
             >
                 {/* Campo de Email */}
                 <TextField
-                    fullWidth
+                    width={"100%"}
                     label="Email"
                     variant="outlined"
                     InputLabelProps={{ style: { color: "white" } }}
@@ -63,7 +63,7 @@ const Login = () => {
 
                 {/* Campo de Senha */}
                 <TextField
-                    fullWidth
+                    width={"100%"}
                     label="Senha"
                     variant="outlined"
                     type={showPassword ? "text" : "password"}
@@ -99,7 +99,7 @@ const Login = () => {
                 {/* Botão de Login */}
                 <Button
                     variant="contained"
-                    fullWidth
+                    width={"100%"}
                     style={{
                         backgroundColor: "#365BDC",
                         color: "white",
@@ -131,7 +131,7 @@ const Login = () => {
                 {/* Botão de Cadastro */}
             <Button
                 variant="outlined"
-                fullWidth
+                width={"100%"}
                 style={{
                     borderColor: "white",
                     color: "white",
@@ -147,7 +147,7 @@ const Login = () => {
             <Button
                 variant="outlined"
 
-                fullWidth
+                width={"100%"}
                 style={{
                     borderColor: "white",
                     color: "white",

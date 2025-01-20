@@ -79,7 +79,7 @@ const ContextForm = ({ data = initial_data }) => {
 
   return (
     <form style={{ maxWidth: "520px", margin: "0 auto" }}>
-      <FormControl fullWidth margin="normal">
+      <FormControl sx={{width: "100%"}} margin="normal">
         <InputLabel id="avaliacao-label">Avaliação</InputLabel>
         <Select
           labelId="avaliacao-label"
@@ -95,7 +95,7 @@ const ContextForm = ({ data = initial_data }) => {
           ))}
         </Select>
       </FormControl>
-      <FormControl fullWidth margin="normal" disabled={!selectedAssessment}>
+      <FormControl sx={{width: "100%"}} margin="normal" disabled={!selectedAssessment}>
         <InputLabel id="exame-label">Exame</InputLabel>
         <Select
           labelId="exame-label"
@@ -111,7 +111,7 @@ const ContextForm = ({ data = initial_data }) => {
           ))}
         </Select>
       </FormControl>
-      <FormControl fullWidth margin="normal" disabled={!selectedExam}>
+      <FormControl sx={{width: "100%"}} margin="normal" disabled={!selectedExam}>
         <InputLabel id="escola-label">Escola</InputLabel>
         <Select
           labelId="escola-label"
@@ -127,7 +127,7 @@ const ContextForm = ({ data = initial_data }) => {
           ))}
         </Select>
       </FormControl>
-      <FormControl fullWidth margin="normal" disabled={!selectedSchool}>
+      <FormControl sx={{width: "100%"}} margin="normal" disabled={!selectedSchool}>
         <InputLabel id="turma-label">Turma</InputLabel>
         <Select
           labelId="turma-label"
