@@ -46,19 +46,19 @@ const Heatmap = ({
     let data_y = JSON.parse(JSON.stringify(refLabelsY));
 
     if (orderBy == "x" && order == "ascending") {
-      sortAndGroupedLines(dataset, data_y, false, "score");
-    } else if (orderBy == "x" && order == "descending") {
       sortAndGroupedLines(dataset, data_y, true, "score");
+    } else if (orderBy == "x" && order == "descending") {
+      sortAndGroupedLines(dataset, data_y, false, "score");
     } else if (orderBy == "y" && order == "ascending") {
-      sortAndGroupedColumns(dataset, data_x, false, "score");
-    } else if (orderBy == "y" && order == "descending") {
       sortAndGroupedColumns(dataset, data_x, true, "score");
+    } else if (orderBy == "y" && order == "descending") {
+      sortAndGroupedColumns(dataset, data_x, false, "score");
     } else if (orderBy == "all" && order == "ascending") {
-      sortMatrixByRowSum(dataset, data_y, true);
-      sortMatrixByColumnSum(dataset, data_x, true);
-    } else if (orderBy == "all" && order == "descending") {
       sortMatrixByRowSum(dataset, data_y, false);
       sortMatrixByColumnSum(dataset, data_x, false);
+    } else if (orderBy == "all" && order == "descending") {
+      sortMatrixByRowSum(dataset, data_y, true);
+      sortMatrixByColumnSum(dataset, data_x, true);
     }
 
     setDataset(dataset);
