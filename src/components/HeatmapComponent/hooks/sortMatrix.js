@@ -120,6 +120,10 @@ export function sortMatrixHorizontal(matrix, vector, factor) {
 }
 
 export function sortAndGroupedLines(dataset, vector, best, method = "categorico") {
+    console.log("Ordenando linhas");
+    console.log("Melhor: " + best);
+    console.log("Método: " + method);
+    console.log("Vetor: " + vector);
     if (best) {
         sortMatrixLines(dataset, false);
         if (method == "score") {
@@ -142,6 +146,10 @@ export function sortAndGroupedLines(dataset, vector, best, method = "categorico"
 }
 
 export function sortAndGroupedColumns(dataset, vector, best, method) {
+    console.log("Ordenando colunas");
+    console.log("Melhor: " + best);
+    console.log("Método: " + method);
+    console.log("Vetor: " + vector);
     if (best) {
         sortMatrixColumns(dataset, false);
         if (method == "score") {
