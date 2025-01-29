@@ -82,9 +82,9 @@ const Heatmap = ({
   ]);
 
   useEffect(() => {
-    // setRefLabelsX(labelsX);
-    // setRefLabelsY(labelsY);
-    // setRefMatrix(matrix);
+    setRefLabelsX(labelsX);
+    setRefLabelsY(labelsY);
+    setRefMatrix(matrix);
 
   }, [matrix, labelsX, labelsY]);
 
