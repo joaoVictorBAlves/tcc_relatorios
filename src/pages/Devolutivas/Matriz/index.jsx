@@ -50,6 +50,7 @@ const MatrixStudentItem = () => {
 
   const [orderBy, setOrderBy] = useState("all");
   const [order, setOrder] = useState("pattern");
+  const [palete, setPalete] = useState("palete1");
 
   const [prevOrderBy, setPrevOrderBy] = useState("all");
   const [prevOrder, setPrevOrder] = useState("pattern");
@@ -109,6 +110,8 @@ const MatrixStudentItem = () => {
         prevOrderBy={prevOrderBy}
         setPrevOrder={setPrevOrder}
         setPrevOrderBy={setPrevOrderBy}
+        palete={palete}
+        setPalete={setPalete}
         onSort={() => {
           setOrder(prevOrder);
           setOrderBy(prevOrderBy);
@@ -158,7 +161,7 @@ const MatrixStudentItem = () => {
           type={"categorical"}
           width={dimensions.width * 0.85}
           height={dimensions.height}
-          margin={80}
+          margin={200}
           labelsX={columns}
           labelsY={rows}
           matrix={data}

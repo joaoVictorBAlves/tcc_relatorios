@@ -1,8 +1,9 @@
 import { Box, Button, MenuItem, Select, Typography } from "@mui/material";
 import { useSelectionStore } from "../../../../../stores/contextStore";
 import { useState } from "react";
+import SelectPalete from "../../../../../components/SelectPalete";
 
-const MatrixActions = ({ prevOrder="pattern", prevOrderBy="all", setPrevOrder, setPrevOrderBy, onSort }) => {
+const MatrixActions = ({ prevOrder="pattern", prevOrderBy="all", setPrevOrder, setPrevOrderBy, onSort, palete, setPalete }) => {
     const { agroupedStudents, agroupedQuestions } = useSelectionStore();
     const [selectedOrder, setSelectedOrder] = useState(prevOrder);
     const [selectedOrderBy, setSelectedOrderBy] = useState(prevOrderBy);
@@ -19,7 +20,7 @@ const MatrixActions = ({ prevOrder="pattern", prevOrderBy="all", setPrevOrder, s
 
     return (
         <Box display="flex" justifyContent="space-between" alignItems="center" marginTop={5} width="100%">
-            <Box display="flex" flex={1} flexDirection="column" alignItems="flex-start" marginRight={2}>
+            <Box display="flex" flex={2} flexDirection="column" alignItems="flex-start" marginRight={2}>
                 <Typography variant="body1">Ordenar:</Typography>
                 <Select value={selectedOrderBy} onChange={handleOrderByChange} sx={{ height: 41, width: '100%' }}>
                     <MenuItem value="all">{agroupedStudents ? 'Turmas' : 'Alunos'} e {agroupedQuestions ? 'Exames' : 'Questões'}</MenuItem>
@@ -27,7 +28,7 @@ const MatrixActions = ({ prevOrder="pattern", prevOrderBy="all", setPrevOrder, s
                     <MenuItem value="y">{agroupedQuestions ? 'Exames' : 'Questões'}</MenuItem>
                 </Select>
             </Box>
-            <Box display="flex" flex={1} flexDirection="column" alignItems="flex-start" marginRight={2}>
+            <Box display="flex" flex={2} flexDirection="column" alignItems="flex-start" marginRight={2}>
                 <Typography variant="body1">Ordem:</Typography>
                 <Select value={selectedOrder} onChange={handleOrderChange} sx={{ height: 41, width: '100%' }}>
                     <MenuItem value="pattern">Ordem Padrão</MenuItem>
@@ -37,11 +38,7 @@ const MatrixActions = ({ prevOrder="pattern", prevOrderBy="all", setPrevOrder, s
             </Box>
             <Box display="flex" flex={1} flexDirection="column" alignItems="flex-start" marginRight={2}>
                 <Typography variant="body1">Paleta de cores:</Typography>
-                <Select defaultValue="palette1" sx={{ height: 41, width: '100%' }}>
-                    <MenuItem value="palette1">Paleta 1</MenuItem>
-                    <MenuItem value="palette2">Paleta 2</MenuItem>
-                    <MenuItem value="palette3">Paleta 3</MenuItem>
-                </Select>
+                <SelectPalete palete={palete} setPalete={setPalete} type="categorical" />
             </Box>
             <Button flex={1} variant="contained" color="primary" onClick={onSort} sx={{
                 bgcolor: "#365BDC",

@@ -1,0 +1,69 @@
+.palete {
+    display: flex;
+    width: fit-content;
+    padding: 5px 16px 5px 16px;
+    border-radius: 4px;
+    border: solid 1px #CCCCCC;
+    color: #677080;
+    opacity: 0px;
+    justify-items: center;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.arrow {
+    position: relative;
+    left: 10px;
+    top: 2px;
+}
+
+.menu {
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding-block: 10px;
+    background-color: #FFF;
+    border-radius: 4px;
+    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+
+    position: absolute;
+    margin-top: 80px;
+
+}
+
+.menu span {
+    font-family: Poppins;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    text-align: left;
+    color: #365BDC;
+    text-decoration: underline;
+    text-align: left;
+    margin-left: 30px;
+    cursor: pointer;
+}
+
+.menu-item {
+    width: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFF;
+    padding: 10px;
+    padding-inline: 30px;
+}
+
+.menu-item:hover {
+    background-color: #F5F5F5;
+}
+
+.menu:focus-visible {
+    background-color: #365BDC;
+}
+
+.palete:hover {
+    border: solid 1px #677080;
+}
