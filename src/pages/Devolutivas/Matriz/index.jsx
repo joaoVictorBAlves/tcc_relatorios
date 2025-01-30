@@ -97,14 +97,33 @@ const MatrixStudentItem = () => {
 
       setRows(rowLabels);
       setColumns(columnLabels);
-      setData(heatmapData)
+      setData(heatmapData);
     }
   }, [csvData]);
 
   return (
     <Box marginInline={12} marginTop={4}>
-      <Typography variant="h6" component="div" sx={{ fontFamily: "Poppins", fontSize: 28, fontWeight: 500, lineHeight: "50px", textAlign: "left" }}>Devolutivas</Typography>
-      <ContextBox assessment={assessment} exam={exam} school={school} selectedClass={selectedClass} onChangeContext={() => { }} onPrint={() => { }} />
+      <Typography
+        variant="h6"
+        component="div"
+        sx={{
+          fontFamily: "Poppins",
+          fontSize: 28,
+          fontWeight: 500,
+          lineHeight: "50px",
+          textAlign: "left",
+        }}
+      >
+        Devolutivas
+      </Typography>
+      <ContextBox
+        assessment={assessment}
+        exam={exam}
+        school={school}
+        selectedClass={selectedClass}
+        onChangeContext={() => {}}
+        onPrint={() => {}}
+      />
       <MatrixActions
         prevOrder={prevOrder}
         prevOrderBy={prevOrderBy}
@@ -117,31 +136,84 @@ const MatrixStudentItem = () => {
           setOrderBy(prevOrderBy);
         }}
       />
-      <Box width={"100%"} display={"flex"} justifyContent={"space-between"} alignItems={"center"} mt={4}>
-        <Typography variant="h6" component="div" sx={{ fontFamily: "Poppins", fontSize: "18px", fontWeight: 600, lineHeight: "26px", textAlign: "left" }}>
+      <Box
+        width={"100%"}
+        display={"flex"}
+        justifyContent={"space-between"}
+        alignItems={"center"}
+        mt={4}
+      >
+        <Typography
+          variant="h6"
+          component="div"
+          sx={{
+            fontFamily: "Poppins",
+            fontSize: "18px",
+            fontWeight: 600,
+            lineHeight: "26px",
+            textAlign: "left",
+          }}
+        >
           {assessment.title}
         </Typography>
         {order !== null ? (
           <Box display={"flex"} alignItems={"center"} gap={"10px"}>
-            <Typography variant="h6" component="div" sx={{ fontFamily: "Poppins", fontSize: "14px", fontWeight: 600, lineHeight: "20px", textAlign: "left" }}>Ordenado em</Typography>
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{
+                fontFamily: "Poppins",
+                fontSize: "14px",
+                fontWeight: 600,
+                lineHeight: "20px",
+                textAlign: "left",
+              }}
+            >
+              Ordenado em
+            </Typography>
             <SortStatus order={order} orderBy={orderBy} />
           </Box>
         ) : (
-          <Typography variant="h6" component="div" sx={{ fontFamily: "Poppins", fontSize: "14px", fontWeight: 600, lineHeight: "20px", textAlign: "left" }}>Ordem Original</Typography>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{
+              fontFamily: "Poppins",
+              fontSize: "14px",
+              fontWeight: 600,
+              lineHeight: "20px",
+              textAlign: "left",
+            }}
+          >
+            Ordem Original
+          </Typography>
         )}
       </Box>
-      <Box width={"100%"} display={"flex"} justifyContent={"space-between"} alignItems={"center"} mt={2}>
-        <Typography variant="h6" component="div" sx={{
-          fontFamily: "Poppins",
-          fontSize: "14px",
-          fontWeight: 400,
-          lineHeight: "21px",
-          textAlign: "left",
-          textUnderlinePosition: "from-font",
-          textDecorationSkipInk: "none",
-          color: "#677080"
-
-        }}>{columns.length * rows.length} Resultados | {rows.length} {agroupedStudents ? 'Turmas' : 'Alunos'} e {columns.length} {agroupedQuestions ? 'Exames' : 'Questões'}</Typography>
+      <Box
+        width={"100%"}
+        display={"flex"}
+        justifyContent={"space-between"}
+        alignItems={"center"}
+        mt={2}
+      >
+        <Typography
+          variant="h6"
+          component="div"
+          sx={{
+            fontFamily: "Poppins",
+            fontSize: "14px",
+            fontWeight: 400,
+            lineHeight: "21px",
+            textAlign: "left",
+            textUnderlinePosition: "from-font",
+            textDecorationSkipInk: "none",
+            color: "#677080",
+          }}
+        >
+          {columns.length * rows.length} Resultados | {rows.length}{" "}
+          {agroupedStudents ? "Turmas" : "Alunos"} e {columns.length}{" "}
+          {agroupedQuestions ? "Exames" : "Questões"}
+        </Typography>
 
         <Legend
           items={[
@@ -156,12 +228,17 @@ const MatrixStudentItem = () => {
           ]}
         ></Legend>
       </Box>
-      <Box width={"100%"} marginTop={2} sx={{ border: "1px solid #E5E5E5", borderRadius: "8px" }}>
+      <Box
+        width={"100%"}
+        marginTop={2}
+        sx={{ border: "1px solid #E5E5E5", borderRadius: "8px" }}
+      >
         <Heatmap
+          key={dimensions.width + dimensions.height + "key"}
           type={"categorical"}
           width={dimensions.width * 0.85}
           height={dimensions.height}
-          margin={200}
+          margin={100}
           labelsX={columns}
           labelsY={rows}
           matrix={data}
@@ -169,7 +246,7 @@ const MatrixStudentItem = () => {
           order={order}
           palete={"palete1"}
           selectedLabel={null}
-          setSelectedLabel={() => { }}
+          setSelectedLabel={() => {}}
         />
       </Box>
     </Box>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import PropTypes from "prop-types";
 import * as d3 from "d3";
 import { renderHeatmap } from "./hooks/renderHeatmap";
 import {
@@ -31,7 +32,7 @@ const Heatmap = ({
   const [refLabelsY, setRefLabelsY] = useState(labelsY);
   const [refMatrix, setRefMatrix] = useState(matrix);
 
-  function handleOnMouseOver(event, type) {
+  function handleOnMouseOver() {
     // Pass
   }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -79,7 +80,6 @@ const Heatmap = ({
     setRefLabelsX(labelsX);
     setRefLabelsY(labelsY);
     setRefMatrix(matrix);
-
   }, [matrix, labelsX, labelsY]);
 
   useEffect(() => {
@@ -91,8 +91,8 @@ const Heatmap = ({
         palete == "palete2"
           ? d3.interpolateRdBu
           : palete == "palete3"
-            ? d3.interpolateBlues
-            : d3.interpolateRdYlGn
+          ? d3.interpolateBlues
+          : d3.interpolateRdYlGn
       );
 
     const color =
@@ -100,8 +100,8 @@ const Heatmap = ({
         ? palete == "palete1"
           ? ["#E5193B", "#3FCC33"]
           : palete == "palete2"
-            ? ["#88572C", "#DDB27C", "#12939A"]
-            : ["#00939C", "#89C6CA", "#E6FAFA"]
+          ? ["#88572C", "#DDB27C", "#12939A"]
+          : ["#00939C", "#89C6CA", "#E6FAFA"]
         : colorScale;
 
     renderHeatmap(
@@ -148,6 +148,20 @@ const Heatmap = ({
       <svg ref={heatmapRef} width={width} height={height}></svg>
     </div>
   );
+};
+Heatmap.propTypes = {
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
+  margin: PropTypes.object.isRequired,
+  labelsX: PropTypes.array.isRequired,
+  labelsY: PropTypes.array.isRequired,
+  matrix: PropTypes.array.isRequired,
+  type: PropTypes.string.isRequired,
+  order: PropTypes.string,
+  orderBy: PropTypes.string,
+  palete: PropTypes.string,
+  selectedLabel: PropTypes.string,
+  setSelectedLabel: PropTypes.func.isRequired,
 };
 
 export default Heatmap;

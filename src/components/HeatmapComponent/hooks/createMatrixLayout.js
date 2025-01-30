@@ -1,4 +1,8 @@
 export function createMatrixLayout(xLabels, yLabels, matrix, width, height, margin) {
+    console.log("xLabels", xLabels);
+    console.log("yLabels", yLabels);
+    console.log("matrix", matrix);
+
     const layout = [];
     const totalX = xLabels.length; // Deve ser igual ao número de colunas da matriz
     const totalY = yLabels.length; // Deve ser igual ao número de linhas da matriz
