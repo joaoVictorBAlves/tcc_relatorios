@@ -105,6 +105,36 @@ const MatrixStudentItem = () => {
     }
   }, [csvData]);
 
+  const getLegendItems = (palete) => {
+    switch (palete) {
+      case "palete1":
+        return [
+          { color: "#ED623E", label: "Erro" },
+          { color: "#94D16A", label: "Acerto" },
+        ];
+      case "palete2":
+        return [
+          { color: "#8D5510", label: "Erro" },
+          { color: "#4DA79E", label: "Acerto" },
+        ];
+      case "palete3":
+        return [
+          { color: "#B7D5EA", label: "Erro" },
+          { color: "#3887C0", label: "Acerto" },
+        ];
+      case "palete4":
+        return [
+          { color: "#CA2F26", label: "Erro" },
+          { color: "#7CABD2", label: "Acerto" },
+        ];
+      default:
+        return [
+          { color: "#ED623E", label: "Erro" },
+          { color: "#94D16A", label: "Acerto" },
+        ];
+    }
+  };
+
   return (
     <Box marginInline={12} marginTop={4}>
       <Typography
@@ -225,18 +255,7 @@ const MatrixStudentItem = () => {
           {agroupedQuestions ? "Exames" : "Questões"}
         </Typography>
 
-        <Legend
-          items={[
-            {
-              color: "#ED623E",
-              label: "Erro",
-            },
-            {
-              color: "#94D16A",
-              label: "Acerto",
-            },
-          ]}
-        ></Legend>
+        <Legend items={getLegendItems(palete)}></Legend>
       </Box>
       <Box
         width={"100%"}
@@ -254,7 +273,7 @@ const MatrixStudentItem = () => {
           matrix={data}
           orderBy={orderBy}
           order={order}
-          palete={"palete1"}
+          palete={palete}
           selectedLabel={null}
           setSelectedLabel={() => {}}
           agroupX={agroupX}

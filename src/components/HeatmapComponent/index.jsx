@@ -93,18 +93,18 @@ const Heatmap = ({
         palete == "palete2"
           ? d3.interpolateRdBu
           : palete == "palete3"
-          ? d3.interpolateBlues
-          : d3.interpolateRdYlGn
+            ? d3.interpolateBlues
+            : d3.interpolateRdYlGn
       );
 
     const color =
-      type == "categorical"
-        ? palete == "palete1"
-          ? ["#E5193B", "#3FCC33"]
-          : palete == "palete2"
-          ? ["#88572C", "#DDB27C", "#12939A"]
-          : ["#00939C", "#89C6CA", "#E6FAFA"]
-        : colorScale;
+      palete == "palete1"
+        ? d3.interpolateRdYlGn
+        : palete == "palete2"
+          ? d3.interpolateBrBG
+          : palete == "palete3"
+            ? d3.interpolateBlues
+            : d3.interpolateRdYlBu;
 
     renderHeatmap(
       data_x,

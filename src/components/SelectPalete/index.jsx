@@ -3,9 +3,7 @@ import Palete1 from "../Icons/Palete1";
 import "./style.css";
 import Palete2 from "../Icons/Palete2";
 import Palete3 from "../Icons/Palete3";
-import PaleteLin1 from "../Icons/PaleteLin1";
-import PaleteLin2 from "../Icons/PaleteLin2";
-import PaleteLin3 from "../Icons/PaleteLin3";
+import Palete4 from "../Icons/Palete4";
 import { useEffect, useState } from "react";
 
 const SelectPalete = ({ palete, setPalete, type }) => {
@@ -24,23 +22,13 @@ const SelectPalete = ({ palete, setPalete, type }) => {
         }}
       >
         {palete === "palete1" ? (
-          type === "categorical" ? (
-            <Palete1 />
-          ) : (
-            <PaleteLin1 />
-          )
+          <Palete1 />
         ) : palete === "palete2" ? (
-          type === "categorical" ? (
-            <Palete2 />
-          ) : (
-            <PaleteLin2 />
-          )
+          <Palete2 />
         ) : palete === "palete3" ? (
-          type === "categorical" ? (
-            <Palete3 />
-          ) : (
-            <PaleteLin3 />
-          )
+          <Palete3 />
+        ) : palete === "palete4" ? (
+          <Palete4 />
         ) : (
           ""
         )}
@@ -53,13 +41,16 @@ const SelectPalete = ({ palete, setPalete, type }) => {
         style={isMenuOpen ? { display: "flex" } : { display: "none" }}
       >
         <div className="menu-item" onClick={() => setPalete("palete1")}>
-          {type === "categorical" ? <Palete1 /> : <PaleteLin1 />}
+          <Palete1 />
         </div>
         <div className="menu-item" onClick={() => setPalete("palete2")}>
-          {type === "categorical" ? <Palete2 /> : <PaleteLin2 />}
+          <Palete2 />
         </div>
         <div className="menu-item" onClick={() => setPalete("palete3")}>
-          {type === "categorical" ? <Palete3 /> : <PaleteLin3 />}
+          <Palete3 />
+        </div>
+        <div className="menu-item" onClick={() => setPalete("palete4")}>
+          <Palete4 />
         </div>
         <span>Configurações Avançadas...</span>
       </div>

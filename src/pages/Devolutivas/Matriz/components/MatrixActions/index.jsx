@@ -51,7 +51,7 @@ const MatrixActions = ({
     >
       <Box
         display="flex"
-        flex={2}
+        flex={1}
         flexDirection="column"
         alignItems="flex-start"
         marginRight={2}
@@ -76,7 +76,7 @@ const MatrixActions = ({
       </Box>
       <Box
         display="flex"
-        flex={2}
+        flex={1}
         flexDirection="column"
         alignItems="flex-start"
         marginRight={2}

@@ -99,7 +99,7 @@ export function renderHeatmap(labelsX, labelsY, matrix, width, height, margin, h
                 const rowValues = data.filter(d => d.i === labelsYCopy.length - 1 && d.j !== labelsXCopy.length - 1).map(d => d.value);
                 const min = d3.min(rowValues);
                 const max = d3.max(rowValues);
-                const colorScale = d3.scaleSequential(d3.interpolateRdYlGn).domain([min, max]);
+                const colorScale = d3.scaleSequential(color).domain([min, max]);
                 return colorScale(d.value);
             }
             if (isColSum) {
@@ -108,11 +108,34 @@ export function renderHeatmap(labelsX, labelsY, matrix, width, height, margin, h
                 const colValues = data.filter(d => d.j === labelsXCopy.length - 1 && d.i !== labelsYCopy.length - 1).map(d => d.value);
                 const min = d3.min(colValues);
                 const max = d3.max(colValues);
-                const colorScale = d3.scaleSequential(d3.interpolateRdYlGn).domain([min, max]);
+                const colorScale = d3.scaleSequential(color).domain([min, max]);
                 return colorScale(d.value);
             }
 
-            return d.value === 0 ? "#ED623E" : "#94D16A";
+            const colorMap = {
+                interpolateRdYlGn: d3.interpolateRdYlGn,
+                interpolateBrBG: d3.interpolateBrBG,
+                interpolateBlues: d3.interpolateBlues,
+                interpolateRdYlBu: d3.interpolateRdYlBu,
+            };
+
+
+            const getColorName = (colorFunction) => {
+                return Object.keys(colorMap).find(key => colorMap[key] === colorFunction);
+            };
+
+            const colorName = getColorName(color);
+
+            if (colorName === "interpolateRdYlGn") {
+                return d.value === 0 ? "#ED623E" : "#94D16A";
+            } else if (colorName === "interpolateBrBG") {
+                return d.value === 0 ? "#8D5510" : "#4DA79E";
+            } else if (colorName === "interpolateBlues") {
+                return d.value === 0 ? "#B7D5EA" : "#3887C0";
+            } else if (colorName === "interpolateRdYlBu") {
+                return d.value === 0 ? "#CA2F26" : "#7CABD2";
+            }
+
         })
         .on("mouseover", function () {
             d3.select(this).style("fill", d3.color(d3.select(this).style("fill")).darker());
