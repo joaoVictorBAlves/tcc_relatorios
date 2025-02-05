@@ -79,13 +79,7 @@ export function sortMatrixHorizontal(matrix, vector, factor) {
 
     const m = JSON.parse(JSON.stringify(matrix));
     const v = JSON.parse(JSON.stringify(vector));
-
-    console.log("Matriz original");
-    console.log(m);
-    console.log("Labels originais");
-    console.log(v);
-    console.log("factor: :" + factor);
-
+    
     // Contagem da presença do fator em cada coluna
     for (let j = 0; j < matrix[0].length; j++) {
         for (let i = 0; i < matrix.length; i++) {

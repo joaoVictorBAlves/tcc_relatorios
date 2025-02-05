@@ -8,6 +8,7 @@ import {
   sortMatrixByColumnSum,
   sortMatrixByRowSum,
 } from "./hooks/sortMatrix";
+import { data } from "react-router-dom";
 
 const Heatmap = ({
   width,
@@ -43,30 +44,104 @@ const Heatmap = ({
     else if (type == "y") setSelectedLabel(event.target.__data__.target);
   }
 
-  useEffect(() => {
-    let dataset = JSON.parse(JSON.stringify(refMatrix));
-    let data_x = JSON.parse(JSON.stringify(refLabelsX));
-    let data_y = JSON.parse(JSON.stringify(refLabelsY));
+  const getGroups = (labels) => {
+    const groupMap = new Map();
 
-    if (orderBy == "x" && order == "ascending") {
-      sortAndGroupedLines(dataset, data_y, true, "score");
-    } else if (orderBy == "x" && order == "descending") {
-      sortAndGroupedLines(dataset, data_y, false, "score");
-    } else if (orderBy == "y" && order == "ascending") {
-      sortAndGroupedColumns(dataset, data_x, true, "score");
-    } else if (orderBy == "y" && order == "descending") {
-      sortAndGroupedColumns(dataset, data_x, false, "score");
-    } else if (orderBy == "all" && order == "ascending") {
-      sortMatrixByRowSum(dataset, data_y, false);
-      sortMatrixByColumnSum(dataset, data_x, false);
-    } else if (orderBy == "all" && order == "descending") {
-      sortMatrixByRowSum(dataset, data_y, true);
-      sortMatrixByColumnSum(dataset, data_x, true);
+    labels.forEach((label, index) => {
+      const group = label.split("_").pop();
+      if (!groupMap.has(group)) groupMap.set(group, []);
+      groupMap.get(group).push(index);
+    });
+
+    return groupMap;
+  };
+
+  useEffect(() => {
+    let newDataset = JSON.parse(JSON.stringify(refMatrix));
+    let newDataX = JSON.parse(JSON.stringify(refLabelsX));
+    let newDataY = JSON.parse(JSON.stringify(refLabelsY));
+
+    let groupsX = agroupX ? getGroups(newDataX) : null;
+    let groupsY = agroupY ? getGroups(newDataY) : null;
+
+    console.log("groupsX", groupsX);
+
+    // 🔹 Ordenação por agrupamento em X (colunas)
+    if (agroupX && groupsX) {
+      groupsX.forEach((indices) => {
+        let start = indices[0];
+        let end = indices[indices.length - 1] + 1;
+
+        let aux_data_x = [...newDataX.slice(start, end)];
+        let aux_dataset = newDataset.map((row) => [...row.slice(start, end)]);
+
+        if (orderBy === "y" && order === "ascending") {
+          sortAndGroupedColumns(aux_dataset, aux_data_x, true, "score");
+        } else if (orderBy === "y" && order === "descending") {
+          sortAndGroupedColumns(aux_dataset, aux_data_x, false, "score");
+        } else if (orderBy === "all" && order === "ascending") {
+          sortMatrixByColumnSum(aux_dataset, aux_data_x, false);
+        } else if (orderBy === "all" && order === "descending") {
+          sortMatrixByColumnSum(aux_dataset, aux_data_x, true);
+        }
+
+        // 🔹 Reinsere os dados ordenados corretamente
+        newDataX.splice(start, end - start, ...aux_data_x);
+        newDataset.forEach((row, rowIndex) => {
+          row.splice(start, end - start, ...aux_dataset[rowIndex]);
+        });
+      });
     }
 
-    setDataset(dataset);
-    setDataX(data_x);
-    setDataY(data_y);
+    // 🔹 Ordenação por agrupamento em Y (linhas)
+    if (agroupY && groupsY) {
+      groupsY.forEach((indices) => {
+        let start = indices[0];
+        let end = indices[indices.length - 1] + 1;
+
+        let aux_data_y = [...newDataY.slice(start, end)];
+        let aux_dataset = [...newDataset.slice(start, end)];
+
+        if (orderBy === "x" && order === "ascending") {
+          sortAndGroupedLines(aux_dataset, aux_data_y, true, "score");
+        } else if (orderBy === "x" && order === "descending") {
+          sortAndGroupedLines(aux_dataset, aux_data_y, false, "score");
+        } else if (orderBy === "all" && order === "ascending") {
+          sortMatrixByRowSum(aux_dataset, aux_data_y, false);
+        } else if (orderBy === "all" && order === "descending") {
+          sortMatrixByRowSum(aux_dataset, aux_data_y, true);
+        }
+
+        // 🔹 Reinsere os dados ordenados corretamente
+        newDataY.splice(start, end - start, ...aux_data_y);
+        newDataset.splice(start, end - start, ...aux_dataset);
+      });
+    }
+
+    // 🔹 Ordenação sem agrupamentos
+    if (!agroupX && !agroupY) {
+      if (orderBy === "x" && order === "ascending") {
+        sortAndGroupedLines(newDataset, newDataY, true, "score");
+      } else if (orderBy === "x" && order === "descending") {
+        sortAndGroupedLines(newDataset, newDataY, false, "score");
+      } else if (orderBy === "y" && order === "ascending") {
+        sortAndGroupedColumns(newDataset, newDataX, true, "score");
+      } else if (orderBy === "y" && order === "descending") {
+        sortAndGroupedColumns(newDataset, newDataX, false, "score");
+      } else if (orderBy === "all" && order === "ascending") {
+        sortMatrixByRowSum(newDataset, newDataY, false);
+        sortMatrixByColumnSum(newDataset, newDataX, false);
+      } else if (orderBy === "all" && order === "descending") {
+        sortMatrixByRowSum(newDataset, newDataY, true);
+        sortMatrixByColumnSum(newDataset, newDataX, true);
+      }
+    }
+
+    // 🔹 Atualiza estados somente no final, evitando re-renders desnecessários
+    setDataset(newDataset);
+    setDataX(newDataX);
+    setDataY(newDataY);
+
   }, [
     labelsX,
     labelsY,
@@ -76,7 +151,10 @@ const Heatmap = ({
     refLabelsX,
     refLabelsY,
     refMatrix,
+    agroupX,
+    agroupY
   ]);
+
 
   useEffect(() => {
     setRefLabelsX(labelsX);
