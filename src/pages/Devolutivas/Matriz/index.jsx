@@ -50,6 +50,10 @@ const MatrixStudentItem = () => {
 
   const [orderBy, setOrderBy] = useState("all");
   const [order, setOrder] = useState("pattern");
+  const [agroupX, setAgroupX] = useState(false);
+  const [agroupY, setAgroupY] = useState(false);
+  const [prevAgroupX, setPrevAgroupX] = useState(false);
+  const [prevAgroupY, setPrevAgroupY] = useState(false);
   const [palete, setPalete] = useState("palete1");
 
   const [prevOrderBy, setPrevOrderBy] = useState("all");
@@ -134,7 +138,13 @@ const MatrixStudentItem = () => {
         onSort={() => {
           setOrder(prevOrder);
           setOrderBy(prevOrderBy);
+          setAgroupX(prevAgroupX);
+          setAgroupY(prevAgroupY);
         }}
+        agroupX={prevAgroupX}
+        setAgroupX={setPrevAgroupX}
+        agroupY={prevAgroupY}
+        setAgroupY={setPrevAgroupY}
       />
       <Box
         width={"100%"}
@@ -218,11 +228,11 @@ const MatrixStudentItem = () => {
         <Legend
           items={[
             {
-              color: "#EF4838",
+              color: "#ED623E",
               label: "Erro",
             },
             {
-              color: "#40C156",
+              color: "#94D16A",
               label: "Acerto",
             },
           ]}
@@ -247,6 +257,8 @@ const MatrixStudentItem = () => {
           palete={"palete1"}
           selectedLabel={null}
           setSelectedLabel={() => {}}
+          agroupX={agroupX}
+          agroupY={agroupY}
         />
       </Box>
     </Box>

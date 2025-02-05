@@ -22,6 +22,8 @@ const Heatmap = ({
   palete = null,
   selectedLabel,
   setSelectedLabel,
+  agroupX,
+  agroupY,
 }) => {
   const heatmapRef = useRef(null);
   const [dataset, setDataset] = useState(matrix);
@@ -117,7 +119,9 @@ const Heatmap = ({
       type,
       handleOnMouseOver,
       handleOnMouseClick,
-      selectedLabel
+      selectedLabel,
+      agroupX,
+      agroupY
     );
   }, [
     dataset,
@@ -134,6 +138,8 @@ const Heatmap = ({
     selectedLabel,
     matrix,
     handleOnMouseClick,
+    agroupX,
+    agroupY,
   ]);
 
   return (

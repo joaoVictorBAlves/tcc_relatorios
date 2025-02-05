@@ -3,15 +3,15 @@ ID,Exame,Avaliação,Área do Conhecimento,Questão,Habilidade
 - (A) Sujeito simples 
 - (B) Sujeito composto 
 - (C) Sujeito indeterminado 
-- (D) Sujeito inexistente",Sujeito e Predicado
+- (D) Sujeito inexistente",Gramática
 2,1,1,Português,"**Questão 2**: Identifique o tipo de predicado na frase. 
 - (A) Predicado nominal 
 - (B) Predicado verbal 
-- (C) Predicado verbo-nominal",Predicado
+- (C) Predicado verbo-nominal",Gramática
 3,1,1,Português,"**Questão 3**: Qual a classificação da oração destacada? 
 - (A) Oração subordinada substantiva 
 - (B) Oração subordinada adjetiva 
-- (C) Oração subordinada adverbial",Orações Subordinadas
+- (C) Oração subordinada adverbial",Gramática
 4,1,1,Português,"**Questão 4**: Marque a alternativa que apresenta uma figura de linguagem. 
 - (A) Metáfora 
 - (B) Metonímia 
@@ -19,11 +19,11 @@ ID,Exame,Avaliação,Área do Conhecimento,Questão,Habilidade
 5,1,1,Português,"**Questão 5**: Qual a classe gramatical da palavra destacada? 
 - (A) Substantivo 
 - (B) Adjetivo 
-- (C) Advérbio",Classes Gramaticais
+- (C) Advérbio",Gramática
 6,1,1,Português,"**Questão 6**: Identifique o período composto por coordenação. 
 - (A) Período composto por subordinação 
 - (B) Período composto por coordenação 
-- (C) Período simples",Período Composto
+- (C) Período simples",Gramática
 7,1,1,Português,"**Questão 7**: Qual o gênero textual predominante? 
 - (A) Narrativo 
 - (B) Descritivo 
@@ -31,15 +31,15 @@ ID,Exame,Avaliação,Área do Conhecimento,Questão,Habilidade
 8,1,1,Português,"**Questão 8**: Marque a alternativa correta quanto à concordância verbal. 
 - (A) Concordância nominal 
 - (B) Concordância verbal 
-- (C) Concordância pronominal",Concordância Verbal
+- (C) Concordância pronominal",Gêneros Textuais
 9,1,1,Português,"**Questão 9**: Identifique o uso correto da crase. 
 - (A) Antes de palavra feminina 
 - (B) Antes de verbo 
-- (C) Antes de pronome pessoal",Uso da Crase
+- (C) Antes de pronome pessoal",Gramática
 10,1,1,Português,"**Questão 10**: Qual a diferença entre denotação e conotação? 
 - (A) Denotação: sentido literal 
 - (B) Conotação: sentido figurado 
-- (C) Ambos",Denotação e Conotação
+- (C) Ambos",Gêneros Textuais
 11,2,1,Matemática,"**Questão 1**: Qual o valor de x na equação 2x + 3 = 7? 
 - (A) 2 
 - (B) 3 
