@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { useSelectionStore } from "../../../stores/contextStore";
 import Papa from "papaparse";
-import { Box, Typography } from "@mui/material";
+import { Box, IconButton, Modal, Typography } from "@mui/material";
 import ContextBox from "./components/ContextBox";
 import MatrixActions from "./components/MatrixActions";
 import SortStatus from "./components/SortStatus";
 import { Legend } from "../../../components/Legend/Legend";
 import Heatmap from "../../../components/HeatmapComponent";
+import ReactMarkdown from "react-markdown";
+import { CloseOutlined } from "@mui/icons-material";
+
 
 const getFileName = (examId, classId) => {
   if (classId === "all" && examId === "all") {
@@ -59,6 +62,9 @@ const MatrixStudentItem = () => {
   const [prevOrderBy, setPrevOrderBy] = useState("all");
   const [prevOrder, setPrevOrder] = useState("pattern");
 
+  const [selectedLabel, setSelectedLabel] = useState(null);
+  const [content, setContent] = useState(null);
+
   const [dimensions, setDimensions] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
@@ -105,6 +111,50 @@ const MatrixStudentItem = () => {
     }
   }, [csvData]);
 
+  useEffect(() => {
+    const fetchContent = async (label) => {
+      try {
+        let filePath = '';
+        if (label.startsWith('Q')) {
+          filePath = '/db/assessment_content.csv';
+        } else if (label.startsWith('S')) {
+          filePath = '/db/students_content.csv';
+        }
+
+        const response = await fetch(filePath);
+        const text = await response.text();
+        const parsed = Papa.parse(text, { header: true });
+        let contentData;
+
+
+        if (label.startsWith('Q')) {
+          if (label.includes('_e1')) {
+            const questionId = parseInt(label.split('_')[0].substring(1));
+            contentData = parsed.data.find(item => item.ID == questionId);
+          } else if (label.includes('_e2')) {
+            const questionId = parseInt(label.split('_')[0].substring(1)) + 10;
+            contentData = parsed.data.find(item => item.ID == questionId);
+          }
+        } else if (label.startsWith('S')) {
+          contentData = parsed.data.find(item => item.ID == label);
+          console.log(contentData)
+
+        }
+
+        setContent(contentData);
+      } catch (error) {
+        console.error("Erro ao carregar o arquivo CSV:", error);
+      }
+    };
+
+    if (selectedLabel) {
+      fetchContent(selectedLabel);
+    }
+  }, [selectedLabel]);
+
+  useEffect(() => {
+    console.log(content);
+},[content]);
   const getLegendItems = (palete) => {
     switch (palete) {
       case "palete1":
@@ -155,8 +205,8 @@ const MatrixStudentItem = () => {
         exam={exam}
         school={school}
         selectedClass={selectedClass}
-        onChangeContext={() => {}}
-        onPrint={() => {}}
+        onChangeContext={() => { }}
+        onPrint={() => { }}
       />
       <MatrixActions
         prevOrder={prevOrder}
@@ -274,12 +324,89 @@ const MatrixStudentItem = () => {
           orderBy={orderBy}
           order={order}
           palete={palete}
-          selectedLabel={null}
-          setSelectedLabel={() => {}}
+          selectedLabel={selectedLabel}
+          setSelectedLabel={setSelectedLabel}
           agroupX={agroupX}
           agroupY={agroupY}
         />
       </Box>
+      <Modal
+        open={!!selectedLabel}
+        onClose={() => setSelectedLabel(null)}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "#FFFFFF",
+            border: "2px solid #DEE1E8",
+            borderRadius: 1,
+            boxShadow: "0px 4px 24px 0px #365BDC4D",
+            p: 4,
+          }}
+        >
+          <IconButton
+            aria-label="close"
+            onClick={() => setSelectedLabel(null)}
+            sx={{
+              position: "absolute",
+              top: 8,
+              right: 8,
+              color: "#000",
+            }}
+          >
+            <CloseOutlined />
+          </IconButton>
+
+          {content && selectedLabel ? (
+            <>
+              {selectedLabel[0] == 'Q' ? (
+                <>
+                  <Typography id="modal-title" variant="h6" component="h2">
+                    Questão {content.ID}
+                  </Typography>
+                  <Typography sx={{ mt: 2 }}>
+                    <strong>Avaliação:</strong> {content["Área do Conhecimento"]} / Exame {content.Exame}
+                  </Typography>
+                  <Typography sx={{ mt: 2 }}>
+                    <strong>Questão:</strong>
+                  </Typography>
+                  <Box sx={{ mt: 1, p: 1, bgcolor: "#F5F5F5", borderRadius: 1 }}>
+                    <ReactMarkdown>{content.Questão}</ReactMarkdown>
+                  </Box>
+                  <Typography sx={{ mt: 2 }}>
+                    <strong>Habilidade:</strong> {content.Habilidade}
+                  </Typography>
+                </>
+              ) : (
+                <>
+                  <Typography id="modal-title" variant="h6" component="h2">
+                    Aluno {content.ID.split('_')[1]}
+                  </Typography>
+                  <Typography sx={{ mt: 2 }}>
+                    <strong>Nome:</strong> {content.Nome}
+                  </Typography>
+                  <Typography sx={{ mt: 2 }}>
+                    <strong>Matrícula:</strong> {content["Matrícula"]}
+                  </Typography>
+                  <Typography sx={{ mt: 2 }}>
+                    <strong>Email:</strong> {content.Email}
+                  </Typography>
+                </>
+              )}
+            </>
+          ) : (
+            <Typography id="modal-description" sx={{ mt: 2 }}>
+              Carregando...
+            </Typography>
+          )}
+        </Box>
+      </Modal>
     </Box>
   );
 };
