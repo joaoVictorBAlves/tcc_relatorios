@@ -64,9 +64,6 @@ const Heatmap = ({
     let groupsX = agroupX ? getGroups(newDataX) : null;
     let groupsY = agroupY ? getGroups(newDataY) : null;
 
-    console.log("groupsX", groupsX);
-
-    // 🔹 Ordenação por agrupamento em X (colunas)
     if (agroupX && groupsX) {
       groupsX.forEach((indices) => {
         let start = indices[0];
@@ -82,10 +79,10 @@ const Heatmap = ({
         } else if (orderBy === "all" && order === "ascending") {
           sortMatrixByColumnSum(aux_dataset, aux_data_x, false);
         } else if (orderBy === "all" && order === "descending") {
+          sortMatrixByRowSum(dataset, data_y, true);
           sortMatrixByColumnSum(aux_dataset, aux_data_x, true);
         }
 
-        // 🔹 Reinsere os dados ordenados corretamente
         newDataX.splice(start, end - start, ...aux_data_x);
         newDataset.forEach((row, rowIndex) => {
           row.splice(start, end - start, ...aux_dataset[rowIndex]);
@@ -93,7 +90,6 @@ const Heatmap = ({
       });
     }
 
-    // 🔹 Ordenação por agrupamento em Y (linhas)
     if (agroupY && groupsY) {
       groupsY.forEach((indices) => {
         let start = indices[0];
@@ -109,16 +105,15 @@ const Heatmap = ({
         } else if (orderBy === "all" && order === "ascending") {
           sortMatrixByRowSum(aux_dataset, aux_data_y, false);
         } else if (orderBy === "all" && order === "descending") {
+          sortMatrixByColumnSum(dataset, data_x, true);
           sortMatrixByRowSum(aux_dataset, aux_data_y, true);
         }
 
-        // 🔹 Reinsere os dados ordenados corretamente
         newDataY.splice(start, end - start, ...aux_data_y);
         newDataset.splice(start, end - start, ...aux_dataset);
       });
     }
 
-    // 🔹 Ordenação sem agrupamentos
     if (!agroupX && !agroupY) {
       if (orderBy === "x" && order === "ascending") {
         sortAndGroupedLines(newDataset, newDataY, true, "score");
@@ -137,7 +132,6 @@ const Heatmap = ({
       }
     }
 
-    // 🔹 Atualiza estados somente no final, evitando re-renders desnecessários
     setDataset(newDataset);
     setDataX(newDataX);
     setDataY(newDataY);
@@ -193,6 +187,7 @@ const Heatmap = ({
       margin,
       heatmapRef,
       color,
+      order,
       orderBy,
       type,
       handleOnMouseOver,

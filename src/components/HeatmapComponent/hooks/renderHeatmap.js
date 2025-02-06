@@ -1,11 +1,26 @@
 import { createMatrixLayout } from "./createMatrixLayout";
 import * as d3 from "d3";
 
-export function renderHeatmap(labelsX, labelsY, matrix, width, height, margin, heatmapRef, color, orderBy, type, handleOnMouseOver, handleOnMouseClick, selectedLabel, agroupedX, agroupedY) {
+const getGroups = (labels) => {
+    const groupMap = new Map();
+
+    labels.forEach((label, index) => {
+        const group = label.split("_").pop();
+        if (!groupMap.has(group)) groupMap.set(group, []);
+        groupMap.get(group).push(index);
+    });
+
+    return groupMap;
+};
+
+export function renderHeatmap(labelsX, labelsY, matrix, width, height, margin, heatmapRef, color, order, orderBy, type, handleOnMouseOver, handleOnMouseClick, selectedLabel, agroupedX, agroupedY) {
 
     let groupsX = Array.from(new Set(labelsX.map((label) => label.split("_e")[1])));
 
     let groupsY = Array.from(new Set(labelsY.map((label) => label.split("Student_")[1]?.split("_")[1])));
+
+    let groupsXMapped = getGroups(labelsX);
+    let groupsYMapped = getGroups(labelsY);
 
     // Limpar o gráfico existente
     d3.select(heatmapRef.current).selectAll("*").remove();
@@ -49,12 +64,18 @@ export function renderHeatmap(labelsX, labelsY, matrix, width, height, margin, h
             let translateX = d.x;
             let translateY = d.y;
 
-            // Adicionar espaçamento entre grupos X
-            if (agroupedX && groupsX.length > 1) {
-                const groupIndex = groupsX.findIndex(group => labelsX[d.j + 1]?.includes(group));
+            let currentGroupIndex = -1;
+            groupsXMapped.forEach((indices, group) => {
+                if (indices.includes(d.j)) {
+                    currentGroupIndex = groupsX.indexOf(group[1]);
+                }
+            });
 
-                if (groupIndex !== -1) {
-                    translateX += groupIndex * 10; // Ajuste o valor 10 conforme necessário para o espaçamento
+            if (agroupedX && groupsX.length > 1) {
+                if(currentGroupIndex !== -1) {
+                    translateX += currentGroupIndex * 10; 
+                }else{
+                    translateX += 10;
                 }
             }
 

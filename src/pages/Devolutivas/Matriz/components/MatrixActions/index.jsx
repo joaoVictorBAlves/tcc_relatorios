@@ -1,7 +1,7 @@
 import { Box, Button, MenuItem, Select, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import { useSelectionStore } from "../../../../../stores/contextStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SelectPalete from "../../../../../components/SelectPalete";
 
 const MatrixActions = ({
@@ -40,6 +40,16 @@ const MatrixActions = ({
     const value = event.target.value;
     setAgroupY(value == "y");
   };
+
+  useEffect(() => {
+    if (prevOrderBy == "y") {
+      setAgroupY(false)
+    }
+
+    if (prevOrderBy == "x") {
+      setAgroupX(false)
+    }
+  }, [prevOrderBy])
 
   return (
     <Box
@@ -101,6 +111,7 @@ const MatrixActions = ({
       >
         <Typography variant="body1">Agrupar Alunos:</Typography>
         <Select
+          disabled={prevOrderBy == "y"}
           value={agroupY ? "y" : "null"}
           onChange={handleAgroupYChange}
           sx={{ height: 41, width: "100%" }}
@@ -118,6 +129,7 @@ const MatrixActions = ({
       >
         <Typography variant="body1">Agrupar Questões:</Typography>
         <Select
+          disabled={prevOrderBy == "x"}
           value={agroupX ? "x" : "null"}
           onChange={handleAgroupXChange}
           sx={{ height: 41, width: "100%" }}
