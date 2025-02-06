@@ -3,12 +3,14 @@ import RelatorioLogo from "../../assets/relatorio_logo";
 import ContextForm from "../../components/ContextForm";
 import "./Relatorios.css";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 const Relatorios = () => {
   const navigate = useNavigate();
-
-  if (localStorage.getItem("auth") === null) {
-    navigate("/login");
-  }
+  useEffect(() => {
+    if (localStorage.getItem("auth") === null) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   return (
     <div id="relatorios">

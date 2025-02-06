@@ -66,13 +66,15 @@ const cardData = [
 ];
 
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Launcher = () => {
   const navigate = useNavigate();
-
-  if (localStorage.getItem("auth") === null) {
-    navigate("/login");
-  }
+  useEffect(() => {
+    if (localStorage.getItem("auth") === null) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   return (
     <div id="launcher">

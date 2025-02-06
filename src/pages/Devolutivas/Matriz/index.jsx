@@ -77,10 +77,11 @@ const MatrixStudentItem = () => {
   const heatmapRef = useRef();
 
   const navigate = useNavigate();
-
-  if (localStorage.getItem("auth") === null) {
-    navigate("/login");
-  }
+  useEffect(() => {
+    if (localStorage.getItem("auth") === null) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const handleResize = () => {
