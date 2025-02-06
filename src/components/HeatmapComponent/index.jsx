@@ -8,7 +8,6 @@ import {
   sortMatrixByColumnSum,
   sortMatrixByRowSum,
 } from "./hooks/sortMatrix";
-import { data } from "react-router-dom";
 
 const Heatmap = ({
   width,
@@ -135,7 +134,7 @@ const Heatmap = ({
     setDataset(newDataset);
     setDataX(newDataX);
     setDataY(newDataY);
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     labelsX,
     labelsY,
@@ -146,9 +145,8 @@ const Heatmap = ({
     refLabelsY,
     refMatrix,
     agroupX,
-    agroupY
+    agroupY,
   ]);
-
 
   useEffect(() => {
     setRefLabelsX(labelsX);
@@ -157,26 +155,14 @@ const Heatmap = ({
   }, [matrix, labelsX, labelsY]);
 
   useEffect(() => {
-    const distinctValues = [...new Set(matrix.flat())];
-    const colorScale = d3
-      .scaleSequential()
-      .domain([Math.min(...distinctValues), Math.max(...distinctValues)])
-      .interpolator(
-        palete == "palete2"
-          ? d3.interpolateRdBu
-          : palete == "palete3"
-            ? d3.interpolateBlues
-            : d3.interpolateRdYlGn
-      );
-
     const color =
       palete == "palete1"
         ? d3.interpolateRdYlGn
         : palete == "palete2"
-          ? d3.interpolateBrBG
-          : palete == "palete3"
-            ? d3.interpolateBlues
-            : d3.interpolateRdYlBu;
+        ? d3.interpolateBrBG
+        : palete == "palete3"
+        ? d3.interpolateBlues
+        : d3.interpolateRdYlBu;
 
     renderHeatmap(
       data_x,
@@ -241,6 +227,8 @@ Heatmap.propTypes = {
   palete: PropTypes.string,
   selectedLabel: PropTypes.string,
   setSelectedLabel: PropTypes.func.isRequired,
+  agroupX: PropTypes.bool,
+  agroupY: PropTypes.bool,
 };
 
 export default Heatmap;

@@ -2,7 +2,14 @@ import { Box, Typography } from "@mui/material";
 import RelatorioLogo from "../../assets/relatorio_logo";
 import ContextForm from "../../components/ContextForm";
 import "./Relatorios.css";
+import { useNavigate } from "react-router-dom";
 const Relatorios = () => {
+  const navigate = useNavigate();
+
+  if (localStorage.getItem("auth") === null) {
+    navigate("/login");
+  }
+
   return (
     <div id="relatorios">
       <Box

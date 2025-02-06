@@ -1,4 +1,11 @@
-import { Box, Button, MenuItem, Select, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  MenuItem,
+  Select,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import PropTypes from "prop-types";
 import { useSelectionStore } from "../../../../../stores/contextStore";
 import { useEffect, useState } from "react";
@@ -17,7 +24,12 @@ const MatrixActions = ({
   agroupY,
   setAgroupY,
 }) => {
-  const { agroupedStudents, agroupedQuestions } = useSelectionStore();
+  const {
+    exam,
+    class: selectedClass,
+    agroupedStudents,
+    agroupedQuestions,
+  } = useSelectionStore();
   const [selectedOrder, setSelectedOrder] = useState(prevOrder);
   const [selectedOrderBy, setSelectedOrderBy] = useState(prevOrderBy);
 
@@ -43,13 +55,14 @@ const MatrixActions = ({
 
   useEffect(() => {
     if (prevOrderBy == "y") {
-      setAgroupY(false)
+      setAgroupY(false);
     }
 
     if (prevOrderBy == "x") {
-      setAgroupX(false)
+      setAgroupX(false);
     }
-  }, [prevOrderBy])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prevOrderBy]);
 
   return (
     <Box
@@ -110,15 +123,22 @@ const MatrixActions = ({
         marginRight={2}
       >
         <Typography variant="body1">Agrupar Alunos:</Typography>
-        <Select
-          disabled={prevOrderBy == "y"}
-          value={agroupY ? "y" : "null"}
-          onChange={handleAgroupYChange}
-          sx={{ height: 41, width: "100%" }}
+        <Tooltip
+          title="Só pode agrupar alunos se tiver mais de uma turma selecionada"
+          disableHoverListener={
+            prevOrderBy !== "y" && selectedClass.id === "all"
+          }
         >
-          <MenuItem value="null">Sem Agrupamento</MenuItem>
-          <MenuItem value="y">Agrupar por Turmas</MenuItem>
-        </Select>
+          <Select
+            disabled={prevOrderBy == "y" || selectedClass.id !== "all"}
+            value={agroupY ? "y" : "null"}
+            onChange={handleAgroupYChange}
+            sx={{ height: 41, width: "100%" }}
+          >
+            <MenuItem value="null">Sem Agrupamento</MenuItem>
+            <MenuItem value="y">Agrupar por Turmas</MenuItem>
+          </Select>
+        </Tooltip>
       </Box>
       <Box
         display="flex"
@@ -128,15 +148,20 @@ const MatrixActions = ({
         marginRight={2}
       >
         <Typography variant="body1">Agrupar Questões:</Typography>
-        <Select
-          disabled={prevOrderBy == "x"}
-          value={agroupX ? "x" : "null"}
-          onChange={handleAgroupXChange}
-          sx={{ height: 41, width: "100%" }}
+        <Tooltip
+          title="Só pode agrupar questões se tiver mais de um exame selecionado"
+          disableHoverListener={prevOrderBy !== "x" && exam.id === "all"}
         >
-          <MenuItem value="null">Sem Agrupamento</MenuItem>
-          <MenuItem value="x">Agrupar por Exames</MenuItem>
-        </Select>
+          <Select
+            disabled={prevOrderBy == "x" || exam.id !== "all"}
+            value={agroupX ? "x" : "null"}
+            onChange={handleAgroupXChange}
+            sx={{ height: 41, width: "100%" }}
+          >
+            <MenuItem value="null">Sem Agrupamento</MenuItem>
+            <MenuItem value="x">Agrupar por Exames</MenuItem>
+          </Select>
+        </Tooltip>
       </Box>
       <Box
         display="flex"

@@ -1,8 +1,14 @@
 import { Box, Typography } from "@mui/material";
 import DevolutivasLogo from "../../assets/devolutivas_logo";
 import ContextForm from "../../components/ContextForm";
+import { useNavigate } from "react-router-dom";
 
 const Devolutivas = () => {
+  const navigate = useNavigate();
+
+  if (localStorage.getItem("auth") === null) {
+    navigate("/login");
+  }
   return (
     <div id="devolutivas">
       <Box

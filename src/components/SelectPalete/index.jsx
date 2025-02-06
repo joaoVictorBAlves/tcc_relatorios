@@ -5,8 +5,9 @@ import Palete2 from "../Icons/Palete2";
 import Palete3 from "../Icons/Palete3";
 import Palete4 from "../Icons/Palete4";
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 
-const SelectPalete = ({ palete, setPalete, type }) => {
+const SelectPalete = ({ palete, setPalete }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -38,7 +39,11 @@ const SelectPalete = ({ palete, setPalete, type }) => {
       </div>
       <div
         className={"menu"}
-        style={isMenuOpen ? { display: "flex" } : { display: "none" }}
+        style={
+          isMenuOpen
+            ? { display: "flex", zIndex: 10000 }
+            : { display: "none", zIndex: 10000 }
+        }
       >
         <div className="menu-item" onClick={() => setPalete("palete1")}>
           <Palete1 />
@@ -56,6 +61,10 @@ const SelectPalete = ({ palete, setPalete, type }) => {
       </div>
     </>
   );
+};
+SelectPalete.propTypes = {
+  palete: PropTypes.string.isRequired,
+  setPalete: PropTypes.func.isRequired,
 };
 
 export default SelectPalete;

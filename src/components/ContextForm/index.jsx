@@ -25,15 +25,26 @@ const initial_data = {
   ],
 };
 
-const ContextForm = ({ data = initial_data }) => {
+const ContextForm = ({ data = initial_data, onConfirm, isModal = false }) => {
   const { setAssessment, setExam, setSchool, setClass } = useSelectionStore();
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [selectedAssessment, setSelectedAssessment] = useState("");
-  const [selectedExam, setSelectedExam] = useState("");
-  const [selectedSchool, setSelectedSchool] = useState("");
-  const [selectedClass, setSelectedClass] = useState("");
+  const {
+    assessment,
+    exam,
+    school,
+    class: selectedClassAlias,
+  } = useSelectionStore();
+
+  const [selectedAssessment, setSelectedAssessment] = useState(
+    assessment?.id || ""
+  );
+  const [selectedExam, setSelectedExam] = useState(exam?.id || "");
+  const [selectedSchool, setSelectedSchool] = useState(school?.id || "");
+  const [selectedClass, setSelectedClass] = useState(
+    selectedClassAlias?.id || ""
+  );
 
   const handleAssessmentChange = (event) => {
     const selected = data.assessments.find(
@@ -79,7 +90,7 @@ const ContextForm = ({ data = initial_data }) => {
 
   return (
     <form style={{ maxWidth: "520px", margin: "0 auto" }}>
-      <FormControl sx={{width: "100%"}} margin="normal">
+      <FormControl sx={{ width: "100%" }} margin="normal">
         <InputLabel id="avaliacao-label">Avaliação</InputLabel>
         <Select
           labelId="avaliacao-label"
@@ -95,7 +106,11 @@ const ContextForm = ({ data = initial_data }) => {
           ))}
         </Select>
       </FormControl>
-      <FormControl sx={{width: "100%"}} margin="normal" disabled={!selectedAssessment}>
+      <FormControl
+        sx={{ width: "100%" }}
+        margin="normal"
+        disabled={!selectedAssessment}
+      >
         <InputLabel id="exame-label">Exame</InputLabel>
         <Select
           labelId="exame-label"
@@ -111,7 +126,11 @@ const ContextForm = ({ data = initial_data }) => {
           ))}
         </Select>
       </FormControl>
-      <FormControl sx={{width: "100%"}} margin="normal" disabled={!selectedExam}>
+      <FormControl
+        sx={{ width: "100%" }}
+        margin="normal"
+        disabled={!selectedExam}
+      >
         <InputLabel id="escola-label">Escola</InputLabel>
         <Select
           labelId="escola-label"
@@ -127,7 +146,11 @@ const ContextForm = ({ data = initial_data }) => {
           ))}
         </Select>
       </FormControl>
-      <FormControl sx={{width: "100%"}} margin="normal" disabled={!selectedSchool}>
+      <FormControl
+        sx={{ width: "100%" }}
+        margin="normal"
+        disabled={!selectedSchool}
+      >
         <InputLabel id="turma-label">Turma</InputLabel>
         <Select
           labelId="turma-label"
@@ -143,19 +166,24 @@ const ContextForm = ({ data = initial_data }) => {
           ))}
         </Select>
       </FormControl>
-      <Button
-        variant="contained"
-        color="primary"
-        sx={{
-          backgroundColor: "#365BDC",
-          padding: "10px 20px",
-          marginTop: "20px",
-        }}
-        onClick={handleSubmit}
-        disabled={!selectedClass}
-      >
-        Confirmar Contexto
-      </Button>
+      {!isModal && (
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{
+            backgroundColor: "#365BDC",
+            padding: "10px 20px",
+            marginTop: "20px",
+          }}
+          onClick={() => {
+            handleSubmit();
+            onConfirm();
+          }}
+          disabled={!selectedClass}
+        >
+          Confirmar Contexto
+        </Button>
+      )}
     </form>
   );
 };
@@ -187,6 +215,8 @@ ContextForm.propTypes = {
       })
     ).isRequired,
   }).isRequired,
+  onConfirm: PropTypes.func,
+  isModal: PropTypes.bool,
 };
 
 export default ContextForm;
