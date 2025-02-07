@@ -233,6 +233,13 @@ const MatrixStudentItem = () => {
           setAgroupX(prevAgroupX);
           setAgroupY(prevAgroupY);
         }}
+        onReset={() => {
+          setOrder("pattern");
+          setOrderBy("all");
+          setAgroupX(false);
+          setAgroupY(false);
+          setPalete("palete1");
+        }}
         agroupX={prevAgroupX}
         setAgroupX={setPrevAgroupX}
         agroupY={prevAgroupY}

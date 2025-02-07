@@ -17,6 +17,7 @@ const MatrixActions = ({
   setPrevOrder,
   setPrevOrderBy,
   onSort,
+  onReset,
   palete,
   setPalete,
   agroupX,
@@ -168,7 +169,7 @@ const MatrixActions = ({
         flex={1}
         flexDirection="column"
         alignItems="flex-start"
-        marginRight={2}
+        marginRight={1}
       >
         <Typography variant="body1">Paleta de cores:</Typography>
         <SelectPalete
@@ -193,11 +194,35 @@ const MatrixActions = ({
           textUnderlinePosition: "from-font",
           textDecorationSkipInk: "null",
           padding: "12px 20px",
+          marginRight: 2,
           height: "41px",
           marginTop: 3,
         }}
       >
         Aplicar
+      </Button>
+
+      <Button
+        flex={1}
+        variant="contained"
+        color="primary"
+        onClick={onReset}
+        sx={{
+          bgcolor: "#FFFFFF",
+          border: "1px solid #CACDD5",
+          color: "#1D2432",
+          fontSize: "16px",
+          fontWeight: 600,
+          lineHeight: "20px",
+          textAlign: "left",
+          textUnderlinePosition: "from-font",
+          textDecorationSkipInk: "null",
+          padding: "12px 20px",
+          height: "41px",
+          marginTop: 3,
+        }}
+      >
+        Limpar
       </Button>
     </Box>
   );
@@ -214,6 +239,7 @@ MatrixActions.propTypes = {
   setAgroupX: PropTypes.func.isRequired,
   agroupY: PropTypes.bool.isRequired,
   setAgroupY: PropTypes.func.isRequired,
+  onReset: PropTypes.func.isRequired,
 };
 
 export default MatrixActions;

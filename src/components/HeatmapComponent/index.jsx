@@ -63,7 +63,7 @@ const Heatmap = ({
     let groupsX = agroupX ? getGroups(newDataX) : null;
     let groupsY = agroupY ? getGroups(newDataY) : null;
 
-    if (agroupX && groupsX) {
+    if (agroupX && groupsX && agroupY && groupsY) {
       groupsX.forEach((indices) => {
         let start = indices[0];
         let end = indices[indices.length - 1] + 1;
@@ -76,10 +76,9 @@ const Heatmap = ({
         } else if (orderBy === "y" && order === "descending") {
           sortAndGroupedColumns(aux_dataset, aux_data_x, false, "score");
         } else if (orderBy === "all" && order === "ascending") {
-          sortMatrixByColumnSum(aux_dataset, aux_data_x, false);
-        } else if (orderBy === "all" && order === "descending") {
-          sortMatrixByRowSum(dataset, data_y, true);
           sortMatrixByColumnSum(aux_dataset, aux_data_x, true);
+        } else if (orderBy === "all" && order === "descending") {
+          sortMatrixByColumnSum(aux_dataset, aux_data_x, false);
         }
 
         newDataX.splice(start, end - start, ...aux_data_x);
@@ -87,9 +86,7 @@ const Heatmap = ({
           row.splice(start, end - start, ...aux_dataset[rowIndex]);
         });
       });
-    }
 
-    if (agroupY && groupsY) {
       groupsY.forEach((indices) => {
         let start = indices[0];
         let end = indices[indices.length - 1] + 1;
@@ -102,10 +99,59 @@ const Heatmap = ({
         } else if (orderBy === "x" && order === "descending") {
           sortAndGroupedLines(aux_dataset, aux_data_y, false, "score");
         } else if (orderBy === "all" && order === "ascending") {
-          sortMatrixByRowSum(aux_dataset, aux_data_y, false);
-        } else if (orderBy === "all" && order === "descending") {
-          sortMatrixByColumnSum(dataset, data_x, true);
           sortMatrixByRowSum(aux_dataset, aux_data_y, true);
+        } else if (orderBy === "all" && order === "descending") {
+          sortMatrixByRowSum(aux_dataset, aux_data_y, false);
+        }
+
+        newDataY.splice(start, end - start, ...aux_data_y);
+        newDataset.splice(start, end - start, ...aux_dataset);
+      });
+    } else if (agroupX && groupsX) {
+      groupsX.forEach((indices) => {
+        let start = indices[0];
+        let end = indices[indices.length - 1] + 1;
+
+        let aux_data_x = [...newDataX.slice(start, end)];
+        let aux_data_y = [...newDataY];
+        let aux_dataset = newDataset.map((row) => [...row.slice(start, end)]);
+
+        if (orderBy === "y" && order === "ascending") {
+          sortAndGroupedColumns(aux_dataset, aux_data_x, true, "score");
+        } else if (orderBy === "y" && order === "descending") {
+          sortAndGroupedColumns(aux_dataset, aux_data_x, false, "score");
+        } else if (orderBy === "all" && order === "ascending") {
+          sortMatrixByColumnSum(aux_dataset, aux_data_x, true);
+          sortMatrixByRowSum(aux_dataset, aux_data_y, true);
+        } else if (orderBy === "all" && order === "descending") {
+          sortMatrixByColumnSum(aux_dataset, aux_data_x, false);
+          sortMatrixByRowSum(aux_dataset, aux_data_y, false);
+        }
+
+        newDataX.splice(start, end - start, ...aux_data_x);
+        newDataset.forEach((row, rowIndex) => {
+          row.splice(start, end - start, ...aux_dataset[rowIndex]);
+        });
+      });
+    } else if (agroupY && groupsY) {
+      groupsY.forEach((indices) => {
+        let start = indices[0];
+        let end = indices[indices.length - 1] + 1;
+
+        let aux_data_y = [...newDataY.slice(start, end)];
+        let aux_data_x = [...newDataX];
+        let aux_dataset = [...newDataset.slice(start, end)];
+
+        if (orderBy === "x" && order === "ascending") {
+          sortAndGroupedLines(aux_dataset, aux_data_y, true, "score");
+        } else if (orderBy === "x" && order === "descending") {
+          sortAndGroupedLines(aux_dataset, aux_data_y, false, "score");
+        } else if (orderBy === "all" && order === "ascending") {
+          sortMatrixByRowSum(aux_dataset, aux_data_y, true);
+          sortMatrixByColumnSum(aux_dataset, aux_data_x, true);
+        } else if (orderBy === "all" && order === "descending") {
+          sortMatrixByRowSum(aux_dataset, aux_data_y, false);
+          sortMatrixByColumnSum(aux_dataset, aux_data_x, false);
         }
 
         newDataY.splice(start, end - start, ...aux_data_y);
@@ -123,11 +169,11 @@ const Heatmap = ({
       } else if (orderBy === "y" && order === "descending") {
         sortAndGroupedColumns(newDataset, newDataX, false, "score");
       } else if (orderBy === "all" && order === "ascending") {
-        sortMatrixByRowSum(newDataset, newDataY, false);
-        sortMatrixByColumnSum(newDataset, newDataX, false);
-      } else if (orderBy === "all" && order === "descending") {
         sortMatrixByRowSum(newDataset, newDataY, true);
         sortMatrixByColumnSum(newDataset, newDataX, true);
+      } else if (orderBy === "all" && order === "descending") {
+        sortMatrixByRowSum(newDataset, newDataY, false);
+        sortMatrixByColumnSum(newDataset, newDataX, false);
       }
     }
 
