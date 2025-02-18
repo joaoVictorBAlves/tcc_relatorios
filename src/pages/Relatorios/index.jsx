@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 const Relatorios = () => {
   const navigate = useNavigate();
+
   useEffect(() => {
     if (localStorage.getItem("auth") === null) {
       navigate("/login");
@@ -40,7 +41,7 @@ const Relatorios = () => {
           Para visualizar um relatório, escolha um contexto:
         </Typography>
       </Box>
-      <ContextForm />
+      <ContextForm static />
     </div>
   );
 };

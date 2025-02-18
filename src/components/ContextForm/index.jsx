@@ -25,7 +25,12 @@ const initial_data = {
   ],
 };
 
-const ContextForm = ({ data = initial_data, onConfirm, isModal = false }) => {
+const ContextForm = ({
+  data = initial_data,
+  onConfirm,
+  isModal = false,
+  static: isStatic = false,
+}) => {
   const { setAssessment, setExam, setSchool, setClass } = useSelectionStore();
   const location = useLocation();
   const navigate = useNavigate();
@@ -38,12 +43,16 @@ const ContextForm = ({ data = initial_data, onConfirm, isModal = false }) => {
   } = useSelectionStore();
 
   const [selectedAssessment, setSelectedAssessment] = useState(
-    assessment?.id || ""
+    isStatic ? "" : assessment?.id || ""
   );
-  const [selectedExam, setSelectedExam] = useState(exam?.id || "");
-  const [selectedSchool, setSelectedSchool] = useState(school?.id || "");
+  const [selectedExam, setSelectedExam] = useState(
+    isStatic ? "" : exam?.id || ""
+  );
+  const [selectedSchool, setSelectedSchool] = useState(
+    isStatic ? "" : school?.id || ""
+  );
   const [selectedClass, setSelectedClass] = useState(
-    selectedClassAlias?.id || ""
+    isStatic ? "" : selectedClassAlias?.id || ""
   );
 
   const handleAssessmentChange = (event) => {
@@ -90,13 +99,13 @@ const ContextForm = ({ data = initial_data, onConfirm, isModal = false }) => {
 
   return (
     <form style={{ maxWidth: "520px", margin: "0 auto" }}>
-      <FormControl sx={{ width: "100%" }} margin="normal">
+      <FormControl sx={{ width: "100%" }} margin="normal" disabled={isStatic}>
         <InputLabel id="avaliacao-label">Avaliação</InputLabel>
         <Select
           labelId="avaliacao-label"
           id="avaliacao"
           name="avaliacao"
-          value={selectedAssessment}
+          value={isStatic ? null : selectedAssessment}
           onChange={handleAssessmentChange}
         >
           {data.assessments.map((assessment) => (
@@ -109,14 +118,14 @@ const ContextForm = ({ data = initial_data, onConfirm, isModal = false }) => {
       <FormControl
         sx={{ width: "100%" }}
         margin="normal"
-        disabled={!selectedAssessment}
+        disabled={!selectedAssessment || isStatic}
       >
         <InputLabel id="exame-label">Exame</InputLabel>
         <Select
           labelId="exame-label"
           id="exame"
           name="exame"
-          value={selectedExam}
+          value={isStatic ? null : selectedExam}
           onChange={handleExamChange}
         >
           {data.exams.map((exam) => (
@@ -129,14 +138,14 @@ const ContextForm = ({ data = initial_data, onConfirm, isModal = false }) => {
       <FormControl
         sx={{ width: "100%" }}
         margin="normal"
-        disabled={!selectedExam}
+        disabled={!selectedExam || isStatic}
       >
         <InputLabel id="escola-label">Escola</InputLabel>
         <Select
           labelId="escola-label"
           id="escola"
           name="escola"
-          value={selectedSchool}
+          value={isStatic ? null : selectedSchool}
           onChange={handleSchoolChange}
         >
           {data.schools.map((school) => (
@@ -149,14 +158,14 @@ const ContextForm = ({ data = initial_data, onConfirm, isModal = false }) => {
       <FormControl
         sx={{ width: "100%" }}
         margin="normal"
-        disabled={!selectedSchool}
+        disabled={!selectedSchool || isStatic}
       >
         <InputLabel id="turma-label">Turma</InputLabel>
         <Select
           labelId="turma-label"
           id="turma"
           name="turma"
-          value={selectedClass}
+          value={isStatic ? null : selectedClass}
           onChange={handleClassChange}
         >
           {data.classes.map((classe) => (
@@ -179,7 +188,7 @@ const ContextForm = ({ data = initial_data, onConfirm, isModal = false }) => {
             handleSubmit();
             onConfirm();
           }}
-          disabled={!selectedClass}
+          disabled={!selectedClass || isStatic}
         >
           Confirmar Contexto
         </Button>
@@ -217,6 +226,7 @@ ContextForm.propTypes = {
   }).isRequired,
   onConfirm: PropTypes.func,
   isModal: PropTypes.bool,
+  static: PropTypes.bool,
 };
 
 export default ContextForm;

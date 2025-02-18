@@ -34,6 +34,11 @@ const MatrixActions = ({
   const [selectedOrder, setSelectedOrder] = useState(prevOrder);
   const [selectedOrderBy, setSelectedOrderBy] = useState(prevOrderBy);
 
+  useEffect(() => {
+    setSelectedOrder(prevOrder);
+    setSelectedOrderBy(prevOrderBy);
+  }, [prevOrder, prevOrderBy]);
+
   const handleOrderChange = (event) => {
     setSelectedOrder(event.target.value);
     setPrevOrder(event.target.value);
