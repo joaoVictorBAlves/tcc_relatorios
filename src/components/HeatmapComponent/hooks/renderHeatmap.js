@@ -72,9 +72,9 @@ export function renderHeatmap(labelsX, labelsY, matrix, width, height, margin, h
             });
 
             if (agroupedX && groupsX.length > 1) {
-                if(currentGroupIndex !== -1) {
-                    translateX += currentGroupIndex * 10; 
-                }else{
+                if (currentGroupIndex !== -1) {
+                    translateX += currentGroupIndex * 10;
+                } else {
                     translateX += 10;
                 }
             }
@@ -114,24 +114,6 @@ export function renderHeatmap(labelsX, labelsY, matrix, width, height, margin, h
             const isLastCell = isRowSum && isColSum;
 
             if (isLastCell) return "none";
-            if (isRowSum) {
-                if (orderBy == "x") return "#FFF";
-
-                const rowValues = data.filter(d => d.i === labelsYCopy.length - 1 && d.j !== labelsXCopy.length - 1).map(d => d.value);
-                const min = d3.min(rowValues);
-                const max = d3.max(rowValues);
-                const colorScale = d3.scaleSequential(color).domain([min, max]);
-                return colorScale(d.value);
-            }
-            if (isColSum) {
-                if (orderBy == "y") return "#FFF";
-
-                const colValues = data.filter(d => d.j === labelsXCopy.length - 1 && d.i !== labelsYCopy.length - 1).map(d => d.value);
-                const min = d3.min(colValues);
-                const max = d3.max(colValues);
-                const colorScale = d3.scaleSequential(color).domain([min, max]);
-                return colorScale(d.value);
-            }
 
             const colorMap = {
                 interpolateRdYlGn: d3.interpolateRdYlGn,
@@ -146,6 +128,71 @@ export function renderHeatmap(labelsX, labelsY, matrix, width, height, margin, h
             };
 
             const colorName = getColorName(color);
+
+            if (isRowSum) {
+                if (orderBy == "x") return "#FFF";
+
+                const rowValues = data.filter(d => d.i === labelsYCopy.length - 1 && d.j !== labelsXCopy.length - 1).map(d => d.value);
+                const min = d3.min(rowValues);
+                const max = d3.max(rowValues);
+                let colorsPalete = [];
+
+                if (colorName === "interpolateRdYlGn") {
+                    colorsPalete = ["#ED623E", "#a17b72", "#829574", "#94D16A"];
+                } else if (colorName === "interpolateBrBG") {
+                    colorsPalete = ["#8D5510", "#B07A4D", "#6E8F8A", "#4DA79E"];
+                } else if (colorName === "interpolateBlues") {
+                    colorsPalete = ["#B7D5EA", "#8AB4D6", "#5A93C3", "#3887C0"];
+                } else if (colorName === "interpolateRdYlBu") {
+                    colorsPalete = ["#CA2F26", "#D96A4E", "#A48BB1", "#7CABD2"];
+                }
+
+                const customInterpolator = (t) => {
+                    if (t < 0.5) {
+                        // Primeira metade: vai do vermelho para um tom menos saturado (cinza esverdeado)
+                        return d3.interpolateHsl(colorsPalete[0], colorsPalete[1])(t * 2);
+                    } else {
+                        // Segunda metade: vai do cinza esverdeado para o verde
+                        return d3.interpolateHsl(colorsPalete[2], colorsPalete[3])((t - 0.5) * 2);
+                    }
+                };
+
+                const colorScale = d3.scaleSequential(customInterpolator).domain([min, max]);
+                return colorScale(d.value);
+            }
+
+            if (isColSum) {
+                if (orderBy == "y") return "#FFF";
+
+                const colValues = data.filter(d => d.j === labelsXCopy.length - 1 && d.i !== labelsYCopy.length - 1).map(d => d.value);
+                const min = d3.min(colValues);
+                const max = d3.max(colValues);
+                // Função de interpolação personalizada  
+                let colorsPalete = [];
+
+                if (colorName === "interpolateRdYlGn") {
+                    colorsPalete = ["#ED623E", "#a17b72", "#829574", "#94D16A"];
+                } else if (colorName === "interpolateBrBG") {
+                    colorsPalete = ["#8D5510", "#B07A4D", "#6E8F8A", "#4DA79E"];
+                } else if (colorName === "interpolateBlues") {
+                    colorsPalete = ["#B7D5EA", "#8AB4D6", "#5A93C3", "#3887C0"];
+                } else if (colorName === "interpolateRdYlBu") {
+                    colorsPalete = ["#CA2F26", "#D96A4E", "#A48BB1", "#7CABD2"];
+                }
+
+                const customInterpolator = (t) => {
+                    if (t < 0.5) {
+                        // Primeira metade: vai do vermelho para um tom menos saturado (cinza esverdeado)
+                        return d3.interpolateHsl(colorsPalete[0], colorsPalete[1])(t * 2);
+                    } else {
+                        // Segunda metade: vai do cinza esverdeado para o verde
+                        return d3.interpolateHsl(colorsPalete[2], colorsPalete[3])((t - 0.5) * 2);
+                    }
+                };
+
+                const colorScale = d3.scaleSequential(customInterpolator).domain([min, max]);
+                return colorScale(d.value);
+            }
 
             if (colorName === "interpolateRdYlGn") {
                 return d.value === 0 ? "#ED623E" : "#94D16A";
