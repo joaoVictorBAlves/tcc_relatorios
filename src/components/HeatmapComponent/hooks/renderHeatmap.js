@@ -233,10 +233,7 @@ export function renderHeatmap(labelsX, labelsY, matrix, width, height, margin, h
             .on('click', function (event) {
                 handleOnMouseClick(event, "y");
             }).attr("fill", (d) => {
-                if (d?.target == selectedLabel) {
-                    return "#365BDC";
-                }
-                return "black";
+                return "#365BDC";
             }).style("font-weight", (d) => {
                 if (d?.target == selectedLabel) {
                     return "700";
@@ -263,16 +260,14 @@ export function renderHeatmap(labelsX, labelsY, matrix, width, height, margin, h
                 return (i + 0.5) * (width);
             })
             .attr("y", -40)
-            .text((d) => `Exame ${d}`)
-            .style("cursor", "pointer")
+            .text((d) => `Exame de ${d == 1 ? 'Português' : 'Matemática'}`)
+            .style("cursor", "")
             .on('click', function (event, d) {
                 handleOnMouseClick(event, "group", d);
             })
             .attr("fill", (d) => {
-                if (d === selectedLabel) {
-                    return "#365BDC";
-                }
-                return "black";
+                return "#1E3A8A";
+
             })
             .style("font-weight", (d) => {
                 if (d === selectedLabel) {
@@ -301,10 +296,8 @@ export function renderHeatmap(labelsX, labelsY, matrix, width, height, margin, h
                 handleOnMouseClick(event, "groupY", d.toUpperCase());
             })
             .attr("fill", (d) => {
-                if (d === selectedLabel) {
-                    return "#365BDC";
-                }
-                return "black";
+                return "#1E3A8A";
+
             })
             .style("font-weight", (d) => {
                 if (d === selectedLabel) {
@@ -331,9 +324,7 @@ export function renderHeatmap(labelsX, labelsY, matrix, width, height, margin, h
             .on('click', function (event) {
                 handleOnMouseClick(event, "x");
             }).attr("fill", (d) => {
-                if (d?.source == selectedLabel) {
                     return "#365BDC";
-                }
                 return "black";
             }).style("font-weight", (d) => {
                 if (d?.source == selectedLabel) {
